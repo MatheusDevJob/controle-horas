@@ -12,5 +12,9 @@ $routes->post('cadastrar_usuario',                  'Home::cadastrar_usuario');
 
 
 $routes->group("sistema", function ($rotas) {
-    $rotas->get("/", 'Home::home');
+    $rotas->get("/",                                'Home::home');
+    $rotas->post("iniciar_turno",                   'Atividades::iniciar_turno');
+    $rotas->post("concluir_turno",                  'Atividades::concluir_turno');
+    $rotas->post("iniciar_atividade",               'Atividades::iniciar_atividade');
+    $rotas->post("concluir_atividade",              'Atividades::concluir_atividade');
 });

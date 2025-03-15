@@ -24,7 +24,9 @@ class Home extends BaseController
 
     public function home()
     {
-        return view('home');
+        return view('home', [
+            "titulo"    => "Home"
+        ]);
     }
 
     public function login()

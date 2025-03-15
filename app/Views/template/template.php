@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title><?= $titulo ?></title>
     <link rel="stylesheet" href="<?= base_url("bootstrap-5.3.3-dist/css/bootstrap.css") ?>">
     <script src="<?= base_url("bootstrap-5.3.3-dist/js/bootstrap.js") ?>"></script>
     <script src="<?= base_url("jquery-3.7.1.js") ?>"></script>
@@ -36,11 +36,18 @@
             botao.attr("disabled", desabilitar);
             botao.html(desabilitar ? spinner : texto);
         }
+
+        function setBotaoStatus(botao, texto, desabilitar) {
+            $(botao).attr("disabled", desabilitar);
+            $(botao).html(desabilitar ? spinner : texto);
+        }
     </script>
 </head>
 
 <body>
-
+    <div class="container" style="height: 100vh;">
+        <?= $this->renderSection("servico"); ?>
+    </div>
 </body>
 
 </html>
