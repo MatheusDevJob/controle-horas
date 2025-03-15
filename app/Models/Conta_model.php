@@ -13,6 +13,7 @@ final class Conta_model extends Model
                 ->set("usuario", $usuario)
                 ->set("senha", $senha)
                 ->set("user_nome", $userNome)
+                ->set("data_registro", date("Y-m-d H:i:s"))
                 ->insert();
 
             $erro = $this->db->error();
@@ -23,5 +24,14 @@ final class Conta_model extends Model
             log_message("error", $e->getMessage(), [$usuario, $senha, $userNome]);
             return ["status" => false, "msg" => $e->getMessage()];
         }
+    }
+
+    function getContaByUser($usuario)
+    {
+        return $this->db->table("usuarios")
+            ->select("user_id, user_nome, usuario, senha, ativo")
+            ->where("usuario", $usuario)
+            ->where("ativo", 1)
+            ->get()->getRowArray();
     }
 }

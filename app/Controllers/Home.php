@@ -27,7 +27,29 @@ class Home extends BaseController
         return view('home');
     }
 
-    public function login() {}
+    public function login()
+    {
+        try {
+            $usuario            = $this->request->getPost("usuario");
+            $senha              = $this->request->getPost("senha");
+
+            $user               = $this->contaM->getContaByUser($usuario);
+            if (!$user)         throw new \Exception("Usuário não encontrado");
+
+            $bool               = password_verify($senha, $user["senha"]);
+            if (!$bool)         throw new \Exception("Senha inválida");
+
+            unset($user["senha"]);
+            unset($user["usuario"]);
+            $user["logado"]     = true;
+            $this->session->set($user);
+            $resposta           = ["status" => true, "msg" => "Acesso liberado."];
+        } catch (\Exception $e) {
+            $resposta           = ["status" => false, "msg" => $e->getMessage()];
+        }
+
+        echo json_encode($resposta, JSON_UNESCAPED_UNICODE);
+    }
 
     public function cadastrar_usuario()
     {

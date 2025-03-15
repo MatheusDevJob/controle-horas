@@ -47,7 +47,7 @@
                 },
                 success: function(response) {
                     if (response.status) {
-                        window.location.href = "/servico";
+                        window.location.href = "/sistema";
                     } else {
                         muda_status_botao("botaoEntrar", "Entrar", false)
                         toastr.warning(response.msg)
