@@ -1,6 +1,14 @@
 <?= $this->extend("template/template"); ?>
 <?= $this->section("servico"); ?>
 <div class="h-100 pt-3">
+    <div class="filtros">
+        <div class="row">
+            <div class="col-2">
+
+            </div>
+            <div class="col-2"></div>
+        </div>
+    </div>
     <div class="card p-4">
         <div class="d-flex justify-content-end">
             <button
@@ -33,6 +41,7 @@
     $(document).ready(function() {});
 
     async function criarAtividade(botao) {
+        if (!confirm("Deseja iniciar turno?")) return;
         const idUnico = Date.now();
 
         try {
@@ -99,10 +108,7 @@
     }
 
     function iniciarTurno(data) {
-        if (!confirm("Deseja iniciar turno?")) return;
-
         muda_status_botao("botaoCriarAtividade", "", true);
-
         return $.ajax({
             url: "<?= base_url("sistema/iniciar_turno") ?>",
             type: "POST",
@@ -183,18 +189,12 @@
             dataType: "JSON",
             success: function(response) {
                 muda_status_botao("botaoConcluirTurno", "Concluir Turno", false)
-                switch (response.status) {
-                    case 1:
-                        toastr.success(response.msg)
-                        $("#botaoCriarAtividade").attr("disabled", false)
-                        $("#botaoConcluirTurno").hide()
-                        break;
-                    case 2:
-                        toastr.info(response.msg)
-                        break;
-                    default:
-                        toastr.warning(response.msg)
-                        break;
+                if (response.status) {
+                    toastr.success(response.msg)
+                    $("#botaoCriarAtividade").attr("disabled", false)
+                    $("#botaoConcluirTurno").hide()
+                } else {
+                    toastr.warning(response.msg)
                 }
             },
             error: function(xhr, status, error) {
