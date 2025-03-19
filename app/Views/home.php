@@ -4,7 +4,11 @@
     <div class="filtros">
         <div class="row">
             <div class="col-2">
+                <label for="clienteSelect" class="form-label">Cliente:</label>
+                <span id="spinner"></span>
+                <select style="display: none;" id="cliente" class="form-select mb-2">
 
+                </select>
             </div>
             <div class="col-2"></div>
         </div>
@@ -38,7 +42,9 @@
 
 <script src="<?= base_url("js/helper.js") ?>"></script>
 <script>
-    $(document).ready(function() {});
+    $(document).ready(function() {
+        buscarClientes();
+    });
 
     async function criarAtividade(botao) {
         if (!confirm("Deseja iniciar turno?")) return;
@@ -108,11 +114,15 @@
     }
 
     function iniciarTurno(data) {
+        const cliente = $("#cliente").val();
         muda_status_botao("botaoCriarAtividade", "", true);
         return $.ajax({
             url: "<?= base_url("sistema/iniciar_turno") ?>",
             type: "POST",
             dataType: "JSON",
+            data: {
+                cliente
+            },
             success: function(response) {
                 if (response.status) {
                     $("#botaoCriarAtividade").html("Iniciar Turno")
@@ -131,12 +141,13 @@
     }
 
     function iniciarAtividade(data) {
+        const dataHoraAtual = obterDataHora();
         return $.ajax({
             url: "<?= base_url("sistema/iniciar_atividade") ?>",
             type: "POST",
             dataType: "JSON",
             data: {
-                data,
+                dataHoraAtual,
             },
             success: function(response) {
                 if (response.status) {
@@ -153,12 +164,13 @@
     }
 
     function concluirAtividade(data, desc) {
+        const dataHoraAtual = obterDataHora();
         return $.ajax({
             url: "<?= base_url("sistema/concluir_atividade") ?>",
             type: "POST",
             dataType: "JSON",
             data: {
-                data,
+                dataHoraAtual,
                 desc
             },
             success: function(response) {
@@ -200,6 +212,35 @@
             error: function(xhr, status, error) {
                 console.error(error);
                 muda_status_botao("botaoConcluirTurno", "Concluir Turno", false)
+            }
+        });
+    }
+
+    function buscarClientes() {
+        $("#spinner").html(spinner)
+        $("#spinner").show()
+        $("#cliente").hide()
+        $.ajax({
+            url: "<?= base_url("sistema/adm/getClientes") ?>",
+            type: "POST",
+            dataType: "JSON",
+            success: function(response) {
+                $("#cliente").show()
+                $("#spinner").hide()
+                if (response.status) {
+                    let linha = '';
+                    $.each(response.data, function(i, val) {
+                        linha += `<option value="${val.cliente_id}">${val.cliente}</option>`;
+                    });
+                    $("#cliente").html(linha);
+                } else {
+                    toastr.warning(response.msg)
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+                $("#cliente").show()
+                $("#spinner").hide()
             }
         });
     }
