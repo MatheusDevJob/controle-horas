@@ -29,7 +29,7 @@ final class Conta_model extends Model
     function getContaByUser($usuario)
     {
         return $this->db->table("usuarios")
-            ->select("user_id, user_nome, usuario, senha, ativo")
+            ->select("user_id, user_nome, usuario, senha, ativo, tipo_usuario_fk")
             ->where("usuario", $usuario)
             ->where("ativo", 1)
             ->get()->getRowArray();

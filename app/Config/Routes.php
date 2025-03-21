@@ -8,6 +8,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/',                                   'Home::index');
 $routes->get('criar_conta',                         'Home::criar_conta');
 $routes->post('login',                              'Home::login');
+$routes->post('logout',                             'Home::logout');
 $routes->post('cadastrar_usuario',                  'Home::cadastrar_usuario');
 
 

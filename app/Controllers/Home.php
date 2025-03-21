@@ -41,10 +41,19 @@ class Home extends BaseController
             $bool               = password_verify($senha, $user["senha"]);
             if (!$bool)         throw new \Exception("Senha inválida");
 
-            unset($user["senha"]);
-            unset($user["usuario"]);
-            $user["logado"]     = true;
-            $this->session->set($user);
+
+
+
+            $sessao             = [
+                "user_id"           => $user["user_id"],
+                "user_nome"         => $user["user_nome"],
+                "usuario"           => $user["usuario"],
+                "ativo"             => $user["ativo"],
+                "tipo_usuario_fk"   => $user["tipo_usuario_fk"],
+                "logado"            => true
+            ];
+
+            $this->session->set($sessao);
             $resposta           = ["status" => true, "msg" => "Acesso liberado."];
         } catch (\Exception $e) {
             $resposta           = ["status" => false, "msg" => $e->getMessage()];
@@ -69,5 +78,10 @@ class Home extends BaseController
         }
 
         echo json_encode($resposta, JSON_UNESCAPED_UNICODE);
+    }
+
+    function logout()
+    {
+        echo json_encode($this->session->destroy());
     }
 }

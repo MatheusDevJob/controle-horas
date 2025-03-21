@@ -41,10 +41,28 @@
             $(botao).attr("disabled", desabilitar);
             $(botao).html(desabilitar ? spinner : texto);
         }
+
+        function logout() {
+            if (!confirm("Deseja sair da conta?")) return;
+
+            $.ajax({
+                url: "<?= base_url("logout") ?>",
+                type: "POST",
+                dataType: "JSON",
+                success: function(response) {
+                    window.location.href = '/';
+                },
+                error: function(xhr, statu, error) {
+                    console.error(error);
+                    toastr.error(error);
+                }
+            })
+        }
     </script>
 </head>
 
 <body>
+    <button class="btn btn-outline-dark float-end me-2 mt-2" onclick="logout()">Sair</button>
     <div class="container" style="height: 100vh;">
         <?= $this->renderSection("servico"); ?>
     </div>
