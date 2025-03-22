@@ -2,14 +2,17 @@
 
 namespace App\Controllers;
 
+use App\Models\Clientes_model;
 use App\Models\Conta_model;
 
 class Home extends BaseController
 {
     private $contaM;
+    private $clienteM;
     public function __construct()
     {
-        $this->contaM = new Conta_model();
+        $this->contaM           = new Conta_model();
+        $this->clienteM         = new Clientes_model();
     }
 
     public function index()
@@ -19,7 +22,9 @@ class Home extends BaseController
 
     public function criar_conta()
     {
-        return view('criar_conta');
+        return view('criar_conta', [
+            "clientes"          => $this->clienteM->getClientes()
+        ]);
     }
 
     public function home()
@@ -67,12 +72,14 @@ class Home extends BaseController
         $usuario                = $this->request->getPost("usuario");
         $senha                  = $this->request->getPost("senha");
         $userNome               = $this->request->getPost("userNome");
+        $cliente64              = $this->request->getPost("cliente");
+        $clienteID              = base64_decode($cliente64);
 
         $senha                  = password_hash($senha, PASSWORD_BCRYPT);
 
 
         try {
-            $resposta           = $this->contaM->cadastrar($usuario, $senha, $userNome);
+            $resposta           = $this->contaM->cadastrar($usuario, $senha, $userNome, $clienteID);
         } catch (\Exception $e) {
             $resposta           = ["status" => false, "msg" => $e->getMessage()];
         }

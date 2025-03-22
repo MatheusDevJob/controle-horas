@@ -27,6 +27,7 @@
             const usuario = $("#usuario").val();
             const senha = $("#senha").val();
             const userNome = $("#userNome").val();
+            const cliente = $("#cliente").val();
 
             if (!usuario) {
                 $("#usuario").focus()
@@ -52,6 +53,7 @@
                 data: {
                     usuario,
                     senha,
+                    cliente,
                     userNome
                 },
                 success: function(response) {
@@ -83,6 +85,16 @@
                 <div class="col">
                     <label for="senha" class="form-label">Senha:</label>
                     <input type="password" class="form-control" id="senha">
+                </div>
+                <div class="col">
+                    <label for="cliente" class="form-label">Cliente:</label>
+                    <select name="" id="cliente" class="form-select">
+                        <?php
+                        foreach ($clientes as $cliente) {
+                            echo "<option value='{$cliente["cliente_id"]}'>{$cliente["cliente"]}</option>";
+                        }
+                        ?>
+                    </select>
                 </div>
             </div>
             <div class="row">
