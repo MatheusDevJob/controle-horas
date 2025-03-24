@@ -42,6 +42,7 @@ abstract class BaseController extends Controller
      * The creation of dynamic property is deprecated in PHP 8.2.
      */
     protected $session;
+    protected $cnpj;
 
     /**
      * @return void
@@ -55,5 +56,6 @@ abstract class BaseController extends Controller
 
         // E.g.: 
         $this->session = service('session');
+        $this->cnpj     = get_cookie("cnpj");
     }
 }

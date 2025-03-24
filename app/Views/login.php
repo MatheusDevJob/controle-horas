@@ -15,6 +15,9 @@
     <link href="<?= base_url('toastr/toastr.min.css') ?>" rel="stylesheet" />
     <script src="<?= base_url('toastr/toastr.min.js') ?>"></script>
     <script>
+        $(document).ready(function() {
+            $('.maskCNPJ').mask('00.000.000/0000-00');
+        });
         const spinner = '<i class="fa-solid fa-spinner fa-spin-pulse"></i>';
 
         function muda_status_botao(id_botao, texto, desabilitar) {
@@ -24,8 +27,14 @@
         }
 
         function login() {
+            const cnpj = $("#cnpj").val();
             const usuario = $("#usuario").val();
             const senha = $("#senha").val();
+
+            if (!cnpj && $('#cnpj').length) {
+                $("#cnpj").focus()
+                return;
+            }
 
             if (!usuario) {
                 $("#usuario").focus()
@@ -43,6 +52,7 @@
                 dataType: "JSON",
                 data: {
                     usuario,
+                    cnpj,
                     senha
                 },
                 success: function(response) {
@@ -66,6 +76,11 @@
     <div class="container">
         <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
             <div class="border p-4 rounded" style="width: 400px">
+                <?php
+                if (!get_cookie('cnpj')) {
+                    echo '<label for="cnpj" class="form-label">Cnpj:</label>';
+                    echo '<input type="text" class="form-control maskCNPJ" id="cnpj">';
+                } ?>
                 <label for="usuario" class="form-label">Usuário:</label>
                 <input type="text" class="form-control" id="usuario">
                 <label for="senha" class="form-label">Senha:</label>

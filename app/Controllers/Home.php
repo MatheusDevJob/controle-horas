@@ -39,6 +39,26 @@ class Home extends BaseController
         try {
             $usuario            = $this->request->getPost("usuario");
             $senha              = $this->request->getPost("senha");
+            $cnpj               = $this->request->getPost('cnpj');
+
+            if ($cnpj) {
+                $cnpj               = str_replace([".", "/", "-"], "", $cnpj);
+                $boolCnpj           = $this->clienteM->getClienteByCnpj($cnpj);
+                if (!$boolCnpj)     throw new \Exception("Empresa não registrada");
+                set_cookie([
+                    'name'     => 'cnpj',
+                    'value'    => $cnpj,
+                    'expire'   => 0,
+                    'path'     => '/',
+                    'secure'   => false,
+                    'httponly' => false
+                ]);
+            } else {
+                $cnpj               = get_cookie('cnpj');
+                if (!$cnpj)         throw new \Exception("Empresa não registrada");
+            }
+
+
 
             $user               = $this->contaM->getContaByUser($usuario);
             if (!$user)         throw new \Exception("Usuário não encontrado");
