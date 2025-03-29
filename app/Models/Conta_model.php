@@ -35,4 +35,13 @@ final class Conta_model extends Model
             ->where("ativo", 1)
             ->get()->getRowArray();
     }
+
+    function get_turno_aberto($userID)
+    {
+        return $this->db->table("turnos")
+            ->select("turno_id")
+            ->where("aberto", 1)
+            ->where("user_fk", $userID)
+            ->get()->getRowArray();
+    }
 }

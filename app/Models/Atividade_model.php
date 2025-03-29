@@ -74,6 +74,7 @@ final class Atividade_model extends Model
                 ->set("fim_atividade",          $dataHora)
                 ->set("descricao",              $desc)
                 ->where("turno_fk",             $turnoID)
+                ->where("fim_atividade IS NULL")
                 ->update();
 
             $erro = $this->db->error();
@@ -91,6 +92,20 @@ final class Atividade_model extends Model
         return $this->db->table("clientes")
             ->select("TO_BASE64(cliente_id) as cliente_id, cliente")
             ->where("ativo", 1)
+            ->get()->getResultArray();
+    }
+
+    function get_ativdades_turno($turnoID)
+    {
+        return $this->db->table("atividades")
+            ->select("
+                atividade_id,
+                descricao,
+                DATE_FORMAT(inicio_atividade, '%d/%m/%Y %H:%i:%s') as inicio_atividade,
+                DATE_FORMAT(fim_atividade, '%d/%m/%Y %H:%i:%s') as fim_atividade,
+                turno_fk
+            ")
+            ->where("turno_fk",         $turnoID)
             ->get()->getResultArray();
     }
 }

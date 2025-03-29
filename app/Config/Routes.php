@@ -18,6 +18,7 @@ $routes->group("sistema", function ($rotas) {
     $rotas->post("concluir_turno",                  'Atividades::concluir_turno');
     $rotas->post("iniciar_atividade",               'Atividades::iniciar_atividade');
     $rotas->post("concluir_atividade",              'Atividades::concluir_atividade');
+    $rotas->post("get_atividades_turno",            'Atividades::get_ativdades_turno');
 
     $rotas->post("buscar_projetos",                 'Projetos::getProjetos');
 

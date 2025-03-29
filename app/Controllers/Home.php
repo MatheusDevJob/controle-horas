@@ -30,7 +30,8 @@ class Home extends BaseController
     public function home()
     {
         return view('home', [
-            "titulo"    => "Home"
+            "titulo"    => "Home",
+            "turnoID"   => $this->session->get("turno_id")
         ]);
     }
 
@@ -47,7 +48,7 @@ class Home extends BaseController
                 if (!$cnpj)         throw new \Exception("Empresa não registrada");
                 set_cookie([
                     'name'     => 'cnpj',
-                    'value'    => $cnpj,
+                    'value'    => $cnpj["cnpj"],
                     'expire'   => 0,
                     'path'     => '/',
                     'secure'   => false,
@@ -67,6 +68,7 @@ class Home extends BaseController
             $bool               = password_verify($senha, $user["senha"]);
             if (!$bool)         throw new \Exception("Senha inválida");
 
+            $turno              = $this->contaM->get_turno_aberto($user["user_id"]);
 
 
 
@@ -78,6 +80,7 @@ class Home extends BaseController
                 "tipo_usuario_fk"   => $user["tipo_usuario_fk"],
                 "cnpj"              => $cnpj["cnpj"],
                 "cliente_id"        => $cnpj["cliente_id"],
+                "turno_id"          => $turno["turno_id"] ?? null,
                 "logado"            => true
             ];
 

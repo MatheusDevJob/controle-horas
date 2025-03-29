@@ -74,6 +74,25 @@ final class Atividades extends BaseController
             $turnoID                = $this->session->get("turno_id");
 
             $resposta               = $this->atvM->concluir_atividade($dataHora, $desc, $turnoID);
+            if ($resposta["status"]) $this->session->remove("turno_id");
+        } catch (\Exception $e) {
+            $resposta = [
+                "status"            => false,
+                "msg"               => $e->getMessage()
+            ];
+        }
+        echo json_encode($resposta, JSON_UNESCAPED_UNICODE);
+    }
+
+    function get_ativdades_turno()
+    {
+        try {
+            $turnoID                = $this->session->get("turno_id");
+
+            $resposta = [
+                "status"            => true,
+                "data"              => $this->atvM->get_ativdades_turno($turnoID)
+            ];
         } catch (\Exception $e) {
             $resposta = [
                 "status"            => false,

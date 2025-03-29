@@ -44,7 +44,45 @@
 <script>
     $(document).ready(function() {
         buscarProjetos();
+        if (turnoID) {
+            $("#botaoCriarAtividade").prop("disabled", true)
+            carregarAtividades()
+        }
     });
+
+    let turnoID = "<?= $turnoID ?>"
+
+    function carregarAtividades() {
+        $.ajax({
+            url: "<?= base_url("sistema/get_atividades_turno") ?>",
+            type: "POST",
+            dataType: "JSON",
+            success: function(response) {
+                if (response.status) {
+                    $("#botaoConcluirTurno").show()
+                    $.each(response.data, function(i, val) {
+                        const idUnico = Date.now();
+                        montaAtividade(idUnico, val.inicio_atividade)
+                        console.log(val);
+
+                        $("#id" + idUnico).val(val.descricao)
+                        if (val.fim_atividade) {
+                            $("#botoes" + idUnico).html(val.fim_atividade);
+                            $("#id" + idUnico).attr("disabled", true);
+                        }
+                    });
+                } else {
+                    muda_status_botao("botaoCriarAtividade", "Iniciar Turno", false)
+                    toastr.warning(response.msg)
+                }
+
+            },
+            error: function(xhr, status, error) {
+                console.error(error);
+                muda_status_botao("botaoCriarAtividade", "Iniciar Turno", false)
+            }
+        });
+    }
 
     async function criarAtividade(botao) {
         if (!confirm("Deseja iniciar turno?")) return;
@@ -71,7 +109,7 @@
                 <tr class="classe${idUnico}">
                     <td class="align-middle">${data}</td>
                     <td><input id="id${idUnico}" placeholder="Descrição da atividade" class="form-control align-middle"></td>
-                    <td class="align-middle">
+                    <td class="align-middle" id="botoes${idUnico}">
                         <button class="btn btn-sm btn-success botoesNovaAtividade" onclick="novaAtividade($(this), ${idUnico}, true)">Nova atividade</button>
                         <button class="btn btn-sm btn-outline-success botoesNovaAtividade" onclick="novaAtividade($(this), ${idUnico}, false)">Apenas concluir</button>
                     </td>
@@ -187,11 +225,11 @@
     }
 
     function concluirTurno() {
-        if (!confirm("Deseja finalizar o turno?")) return;
         if ($(".botoesNovaAtividade").length) {
             toastr.info("Conclua a atividade aberta primeiro.");
             return;
         };
+        if (!confirm("Deseja finalizar o turno?")) return;
 
         muda_status_botao("botaoConcluirTurno", "", true)
 
