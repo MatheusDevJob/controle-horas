@@ -10,7 +10,7 @@ final class Projetos_model extends Model
     {
         return $this->db->table("projetos p")
             ->select("
-                p.projeto_id,
+                TO_BASE64(p.projeto_id) as projeto_id,
                 p.projeto,
             ")
             ->where("p.cliente_fk",             $clienteID)

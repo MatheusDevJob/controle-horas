@@ -77,7 +77,7 @@ class Home extends BaseController
                 "ativo"             => $user["ativo"],
                 "tipo_usuario_fk"   => $user["tipo_usuario_fk"],
                 "cnpj"              => $cnpj["cnpj"],
-                "clienteID"         => $cnpj["cliente_id"],
+                "cliente_id"        => $cnpj["cliente_id"],
                 "logado"            => true
             ];
 

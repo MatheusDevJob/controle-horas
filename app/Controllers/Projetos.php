@@ -15,7 +15,7 @@ final class Projetos extends BaseController
     function getProjetos()
     {
         try {
-            $clienteID              = $this->session->get("clienteID");
+            $clienteID              = $this->session->get("cliente_id");
             $resposta               = ["status" => true, "data" => $this->projetoM->getProjetos($clienteID)];
         } catch (\Throwable $th) {
             $resposta               = ["status" => false, "msg" => $th->getMessage()];
