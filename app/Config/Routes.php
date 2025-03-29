@@ -19,6 +19,8 @@ $routes->group("sistema", function ($rotas) {
     $rotas->post("iniciar_atividade",               'Atividades::iniciar_atividade');
     $rotas->post("concluir_atividade",              'Atividades::concluir_atividade');
 
+    $rotas->post("buscar_projetos",                 'Projetos::getProjetos');
+
     $rotas->group("adm", function ($adm) {
         $adm->post("getClientes",                   "Clientes::getClientes");
     });

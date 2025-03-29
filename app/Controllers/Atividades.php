@@ -15,12 +15,13 @@ final class Atividades extends BaseController
     function iniciar_turno()
     {
         try {
-            $cliente64                          = $this->request->getPost("cliente");
-            $clienteID                          = base64_decode($cliente64);
+            $projeto64                          = $this->request->getPost("projeto");
+            $projetoID                          = base64_decode($projeto64);
 
+            $clienteID                          = $this->session->get("cliente_id");
             $userID                             = $this->session->get("user_id");
 
-            $resposta                           = $this->atvM->iniciar_turno($clienteID, $userID);
+            $resposta                           = $this->atvM->iniciar_turno($clienteID, $projetoID, $userID);
             $this->session->set("turno_id",     $resposta["id"]);
             unset($resposta["id"]);
         } catch (\Exception $e) {

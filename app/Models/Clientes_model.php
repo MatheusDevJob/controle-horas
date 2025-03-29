@@ -35,7 +35,7 @@ final class Clientes_model extends Model
     function getClienteByCnpj($cnpj): array
     {
         return $this->db->table("clientes")
-            ->select("TO_BASE64(cliente_id) as cliente_id, cliente")
+            ->select("cliente_id, cliente, cnpj")
             ->where("cnpj",     $cnpj)
             ->where("ativo",    1)
             ->get()->getRowArray();

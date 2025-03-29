@@ -4,9 +4,9 @@
     <div class="filtros">
         <div class="row">
             <div class="col-2">
-                <label for="clienteSelect" class="form-label">Cliente:</label>
+                <label for="projetoSelect" class="form-label">Projeto:</label>
                 <span id="spinner"></span>
-                <select style="display: none;" id="cliente" class="form-select mb-2">
+                <select style="display: none;" id="projeto" class="form-select mb-2">
 
                 </select>
             </div>
@@ -43,7 +43,7 @@
 <script src="<?= base_url("js/helper.js") ?>"></script>
 <script>
     $(document).ready(function() {
-        buscarClientes();
+        buscarProjetos();
     });
 
     async function criarAtividade(botao) {
@@ -114,14 +114,14 @@
     }
 
     function iniciarTurno(data) {
-        const cliente = $("#cliente").val();
+        const projeto = $("#projeto").val();
         muda_status_botao("botaoCriarAtividade", "", true);
         return $.ajax({
             url: "<?= base_url("sistema/iniciar_turno") ?>",
             type: "POST",
             dataType: "JSON",
             data: {
-                cliente
+                projeto
             },
             success: function(response) {
                 if (response.status) {
@@ -216,30 +216,30 @@
         });
     }
 
-    function buscarClientes() {
+    function buscarProjetos() {
         $("#spinner").html(spinner)
         $("#spinner").show()
-        $("#cliente").hide()
+        $("#projeto").hide()
         $.ajax({
-            url: "<?= base_url("sistema/adm/getClientes") ?>",
+            url: "<?= base_url("sistema/buscar_projetos") ?>",
             type: "POST",
             dataType: "JSON",
             success: function(response) {
-                $("#cliente").show()
+                $("#projeto").show()
                 $("#spinner").hide()
                 if (response.status) {
                     let linha = '';
                     $.each(response.data, function(i, val) {
-                        linha += `<option value="${val.cliente_id}">${val.cliente}</option>`;
+                        linha += `<option value="${val.projeto_id}">${val.projeto}</option>`;
                     });
-                    $("#cliente").html(linha);
+                    $("#projeto").html(linha);
                 } else {
                     toastr.warning(response.msg)
                 }
             },
             error: function(xhr, status, error) {
                 console.error(error);
-                $("#cliente").show()
+                $("#projeto").show()
                 $("#spinner").hide()
             }
         });

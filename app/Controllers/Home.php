@@ -43,8 +43,8 @@ class Home extends BaseController
 
             if ($cnpj) {
                 $cnpj               = str_replace([".", "/", "-"], "", $cnpj);
-                $boolCnpj           = $this->clienteM->getClienteByCnpj($cnpj);
-                if (!$boolCnpj)     throw new \Exception("Empresa não registrada");
+                $cnpj               = $this->clienteM->getClienteByCnpj($cnpj);
+                if (!$cnpj)         throw new \Exception("Empresa não registrada");
                 set_cookie([
                     'name'     => 'cnpj',
                     'value'    => $cnpj,
@@ -55,6 +55,7 @@ class Home extends BaseController
                 ]);
             } else {
                 $cnpj               = get_cookie('cnpj');
+                $cnpj               = $this->clienteM->getClienteByCnpj($cnpj);
                 if (!$cnpj)         throw new \Exception("Empresa não registrada");
             }
 
@@ -75,6 +76,8 @@ class Home extends BaseController
                 "usuario"           => $user["usuario"],
                 "ativo"             => $user["ativo"],
                 "tipo_usuario_fk"   => $user["tipo_usuario_fk"],
+                "cnpj"              => $cnpj["cnpj"],
+                "clienteID"         => $cnpj["cliente_id"],
                 "logado"            => true
             ];
 

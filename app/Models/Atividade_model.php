@@ -6,11 +6,12 @@ use CodeIgniter\Model;
 
 final class Atividade_model extends Model
 {
-    function iniciar_turno($clienteID, $userID)
+    function iniciar_turno($clienteID, $projetoID, $userID)
     {
         try {
             $this->db->table("turnos")
                 ->set("cliente_fk",                 $clienteID)
+                ->set("projeto_fk",                 $projetoID)
                 ->set("user_fk",                    $userID)
                 ->set("inicio_turno",               date("Y-m-d H:i:s"))
                 ->insert();
@@ -24,7 +25,7 @@ final class Atividade_model extends Model
                 "id"            => $this->db->insertID()
             ];
         } catch (\Exception $e) {
-            log_message("error", $e->getMessage(), [$clienteID, $userID]);
+            log_message("error", $e->getMessage(), [$clienteID, $projetoID, $userID]);
             return ["status" => false, "msg" => $e->getMessage()];
         }
     }
