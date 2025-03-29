@@ -76,6 +76,11 @@
     <div class="container">
         <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
             <div class="border p-4 rounded" style="width: 400px">
+                <?php if (isset($_GET['token_invalido'])): ?>
+                    <div class="alert alert-warning">
+                        Sua conta foi acessada em outro navegador. Você foi desconectado por segurança.
+                    </div>
+                <?php endif; ?>
                 <?php
                 if (!get_cookie('cnpj')) {
                     echo '<label for="cnpj" class="form-label">Cnpj:</label>';

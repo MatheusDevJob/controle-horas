@@ -70,6 +70,8 @@ class Home extends BaseController
 
             $turno              = $this->contaM->get_turno_aberto($user["user_id"]);
 
+            $token = bin2hex(random_bytes(32));
+            $this->contaM->atualizar($user["user_id"], ["session_token" => $token]);
 
 
             $sessao             = [
@@ -81,6 +83,7 @@ class Home extends BaseController
                 "cnpj"              => $cnpj["cnpj"],
                 "cliente_id"        => $cnpj["cliente_id"],
                 "turno_id"          => $turno["turno_id"] ?? null,
+                "session_token"     => $token,
                 "logado"            => true
             ];
 
