@@ -80,6 +80,7 @@ class Home extends BaseController
                 "usuario"           => $user["usuario"],
                 "ativo"             => $user["ativo"],
                 "tipo_usuario_fk"   => $user["tipo_usuario_fk"],
+                "valor_hora"        => $user["valor_hora"],
                 "cnpj"              => $cnpj["cnpj"],
                 "cliente_id"        => $cnpj["cliente_id"],
                 "cliente_nome"      => $cnpj["cliente"],

@@ -49,6 +49,14 @@ final class Atividade_model extends Model
         }
     }
 
+    function get_atividade_aberta($turnoID)
+    {
+        return $this->db->table("atividades")
+            ->where("turno_fk",             $turnoID)
+            ->where("fim_atividade IS NULL")
+            ->get()->getRowArray();
+    }
+
     function iniciar_atividade($dataHora, $turnoID)
     {
         try {
@@ -67,12 +75,15 @@ final class Atividade_model extends Model
         }
     }
 
-    function concluir_atividade($dataHora, $desc, $turnoID)
+    function concluir_atividade($dataHora, $desc, $turnoID, $horasTrabalhadas, $valorHora, $valorAtividade)
     {
         try {
             $this->db->table("atividades")
                 ->set("fim_atividade",          $dataHora)
                 ->set("descricao",              $desc)
+                ->set("valor_hora",             $valorHora)
+                ->set("horas_trabalhadas",      $horasTrabalhadas)
+                ->set("valor_atividade",        $valorAtividade)
                 ->where("turno_fk",             $turnoID)
                 ->where("fim_atividade IS NULL")
                 ->update();

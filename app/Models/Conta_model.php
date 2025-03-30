@@ -53,6 +53,7 @@ final class Conta_model extends Model
                 senha,
                 ativo,
                 tipo_usuario_fk,
+                valor_hora,
                 session_token
             ")
             ->where("usuario", $usuario)

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\Atividade_model;
 use App\Models\Conta_model;
+use CodeIgniter\I18n\Time;
 
 final class Atividades extends BaseController
 {
@@ -123,8 +124,27 @@ final class Atividades extends BaseController
             $desc                   = $this->request->getPost("desc");
 
             $turnoID                = $this->session->get("turno_id");
+            $valorHora              = $this->session->get("valor_hora");
 
-            $resposta               = $this->atvM->concluir_atividade($dataHora, $desc, $turnoID);
+            $atividade              = $this->atvM->get_atividade_aberta($turnoID);
+
+            // Cria objetos Time do CI4
+            $inicioAtividade = Time::parse($atividade["inicio_atividade"]);
+            $fimAtividade = Time::parse($dataHora);
+
+            // Calcula diferença em segundos
+            $segundosTrabalhados = $fimAtividade->getTimestamp() - $inicioAtividade->getTimestamp();
+
+            // Converte para horas decimais
+            $horasTrabalhadas = $segundosTrabalhados / 3600;
+
+            // Calcula o valor da atividade
+            $valorAtividade = $horasTrabalhadas * $valorHora;
+
+            $horasTrabalhadas = round($horasTrabalhadas, 2);
+            $valorAtividade = number_format($valorAtividade, 2, ',', '.');
+
+            $resposta               = $this->atvM->concluir_atividade($dataHora, $desc, $turnoID, $horasTrabalhadas, $valorHora, $valorAtividade);
         } catch (\Exception $e) {
             $resposta = [
                 "status"            => false,
