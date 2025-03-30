@@ -25,13 +25,17 @@ $routes->group("sistema", function ($rotas) {
     $rotas->get("visualizar_atividades",            'Atividades::index');
     $rotas->post("getAtividadesUsuariosAjax",       "Atividades::getAtividadesUsuariosAjax");
 
+    $rotas->get("perfil",                           'Home::perfil');
+    $rotas->post("buscaUserByID",                   "Home::get_usuario_by_id");
+    $rotas->post("atualizar_usuario",               "Home::atualizar_usuario");
+
     $rotas->group("adm", function ($adm) {
         $adm->post("getClientes",                   "Clientes::getClientes");
 
         $adm->get("visualizar_usuarios",            "adm\Atividades::index");
         $adm->post("getUsuariosAjax",               "adm\Atividades::getUsuariosAjax");
         $adm->post("getAtividadesUsuariosAjax",     "adm\Atividades::getAtividadesUsuariosAjax");
-        
+
         $adm->get("visualizar_projetos",            "adm\Projetos::index");
         $adm->post("getProjetosAjax",               "adm\Projetos::getProjetosAjax");
         $adm->post("muda_status_projeto",           "adm\Projetos::mudaStatusProjeto");

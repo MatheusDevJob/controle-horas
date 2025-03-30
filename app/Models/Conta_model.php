@@ -30,15 +30,13 @@ final class Conta_model extends Model
 
     function getUserByID($userID)
     {
-        return $this->db->table("usuarios")
+        return $this->db->table("usuarios u")
             ->select("
-                user_id,
-                user_nome,
-                usuario,
-                senha,
-                ativo,
-                tipo_usuario_fk,
-                session_token
+                TO_BASE64(u.user_id) as user_id,
+                u.user_nome,
+                u.usuario,
+                u.tipo_usuario_fk,
+                u.valor_hora
             ")
             ->where("user_id", $userID)
             ->where("ativo", 1)
@@ -71,7 +69,7 @@ final class Conta_model extends Model
             ->get()->getRowArray();
     }
 
-    function atualizar(int $userID, array $novos_dados): bool
+    function atualizarToken(int $userID, array $novos_dados): bool
     {
         return $this->db->table("usuarios")
             ->set($novos_dados)
@@ -120,5 +118,52 @@ final class Conta_model extends Model
         $db->orderBy($params['order_by'], $params['order_dir']);
         $db->limit($params['length'], $params['start']);
         return $db->get()->getResultArray();
+    }
+
+    function atualizaratualizar($userID, $userNome, $valorHora, $clienteID, $tipoUsuarioID): bool
+    {
+        $this->db->transStart();
+        $db = $this->db->table("usuarios")
+            ->set([
+                "user_nome"                 => $userNome,
+                "valor_hora"                => $valorHora,
+            ])
+            ->where("user_id", $userID);
+        $sql = $db->getCompiledUpdate(false);
+        $db->update();
+
+        $erro = $this->db->error();
+        if (!empty($erro['code'])) {
+            log_message("error", 'Erro: ' . $erro['message'] . " SQL => $sql " . " Código erro => " . $erro['code']);
+            $this->db->transRollback();
+            return false;
+        }
+
+        $auditoria = json_encode([
+            "user_nome"                     => $userNome,
+            "valor_hora"                    => $valorHora,
+            "cliente_id"                    => $clienteID
+        ], JSON_UNESCAPED_UNICODE);
+
+        $db = $this->db->table("auditoria_registro_horas.auditoria_usuarios")
+            ->set([
+                "operacao"                  => "atualização",
+                "dados"                     => $auditoria,
+                "usuario_fk"                => $userID,
+                "usuario_nome"              => $userNome,
+                "usuario_tipo_fk"           => $tipoUsuarioID,
+                "user_fk"                => $this->db->insertID(),
+            ]);
+        $sql = $db->getCompiledInsert(false);
+        $db->insert();
+
+        $erro = $this->db->error();
+        if (!empty($erro['code'])) {
+            log_message("error", 'Erro: ' . $erro['message'] . " SQL => $sql " . " Código erro => " . $erro['code']);
+            $this->db->transRollback();
+            return false;
+        }
+
+        return $this->db->transComplete();
     }
 }

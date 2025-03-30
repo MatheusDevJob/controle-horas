@@ -71,7 +71,7 @@ class Home extends BaseController
             $turno              = $this->contaM->get_turno_aberto($user["user_id"]);
 
             $token = bin2hex(random_bytes(32));
-            $this->contaM->atualizar($user["user_id"], ["session_token" => $token]);
+            $this->contaM->atualizarToken($user["user_id"], ["session_token" => $token]);
 
 
             $sessao             = [
@@ -123,5 +123,35 @@ class Home extends BaseController
     function logout()
     {
         echo json_encode($this->session->destroy());
+    }
+
+    public function perfil()
+    {
+        return view('perfil', [
+            "titulo"            => "Configurações do Perfil"
+        ]);
+    }
+
+    function get_usuario_by_id()
+    {
+        $userID                 = $this->session->get("user_id");
+        $resposta               = $this->contaM->getUserByID($userID);
+
+        return $this->response->setJSON($resposta, true);
+    }
+
+    function atualizar_usuario()
+    {
+        $userNome               = $this->request->getPost("user_nome");
+        $valorHora              = $this->request->getPost("valor_hora");
+
+        $clienteID              = $this->session->get("cliente_id");
+        $userID                 = $this->session->get("user_id");
+        $userNome               = $this->session->get("user_nome");
+        $tipoUsuarioID          = $this->session->get("tipo_usuario_fk");
+
+        $resposta               = $this->contaM->atualizaratualizar($userID, $userNome, $valorHora, $clienteID, $tipoUsuarioID);
+
+        return $this->response->setJSON($resposta, true);
     }
 }
