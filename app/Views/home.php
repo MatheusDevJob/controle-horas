@@ -40,7 +40,6 @@
     </div>
 </div>
 
-<script src="<?= base_url("js/helper.js") ?>"></script>
 <script>
     $(document).ready(function() {
         buscarProjetos();

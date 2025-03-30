@@ -16,6 +16,7 @@
     <script src="<?= base_url('toastr/toastr.min.js') ?>"></script>
     <link href="<?= base_url('datatable/datatables.min.css') ?>" rel="stylesheet" />
     <script src="<?= base_url('datatable/datatables.min.js') ?>"></script>
+    <script src="<?= base_url("js/helper.js") ?>"></script>
 
     <script>
         $(document).ready(function() {
@@ -31,6 +32,8 @@
             $('.maskMoney').mask('#.##0,00', {
                 reverse: true
             });
+            atualizarDataHora();
+            setInterval(atualizarDataHora, 1000);
         });
         let spinner = '<i class="fa-solid fa-spinner fa-spin-pulse"></i>';
 
@@ -61,6 +64,11 @@
                 }
             })
         }
+
+        function atualizarDataHora() {
+            const dataHoraAtual = obterDataHoraFormatada();
+            $('#elementoDataHora').text(dataHoraAtual);
+        }
     </script>
     <style>
         body {
@@ -70,8 +78,29 @@
 </head>
 
 <body>
+    <ul class="nav flex-column float-start">
+        <li class="nav-item">
+            <a class="nav-link" href="/sistema">
+                <i class="fa-solid fa-house"></i> Home
+            </a>
+        </li>
+        <?php if ($_SESSION['tipo_usuario_fk'] == 1): ?>
+            <li class="nav-item">
+                <a href="<?= base_url("sistema/adm/visualizar_usuarios") ?>" class="nav-link" aria-current="page">
+                    <i class="fa-solid fa-users"></i> Visualizar Colaboradores
+                </a>
+            </li> <?php endif; ?>
+        <li class="nav-item">
+            <a href="<?= base_url("sistema/visualizar_atividades") ?>" class="nav-link">
+                <i class="fa-solid fa-clipboard-list"></i> Visualizar Atividades
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+        </li>
+    </ul>
     <button class="btn btn-outline-dark float-end me-2 mt-2" onclick="logout()">Sair</button>
-    <a href="<?= base_url("sistema/adm/visualizar_usuarios") ?>" class="btn btn-info float-end me-2 mt-2">Visualizar <i class="fa-solid fa-users"></i></a>
+    <h5 id="elementoDataHora" class="float-end me-2 mt-2"></h5>
     <div class="container" style="height: 100vh;">
         <?= $this->renderSection("servico"); ?>
     </div>
