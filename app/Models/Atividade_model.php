@@ -6,6 +6,14 @@ use CodeIgniter\Model;
 
 final class Atividade_model extends Model
 {
+    function get_turno_aberta($turnoID)
+    {
+        return $this->db->table("turnos")
+            ->where("turno_id",             $turnoID)
+            ->where("fim_turno IS NULL")
+            ->get()->getRowArray();
+    }
+
     function iniciar_turno($clienteID, $projetoID, $userID)
     {
         try {
@@ -30,12 +38,14 @@ final class Atividade_model extends Model
         }
     }
 
-    function finalizar_turno($userID)
+    function finalizar_turno($userID, $data, $horasTrabalhadas, $valorTurno)
     {
         try {
             $this->db->table("turnos")
                 ->set("aberto",                 0)
-                ->set("fim_turno",              date("Y-m-d H:i:s"))
+                ->set("fim_turno",              $data)
+                ->set("horas_trabalhadas",      $horasTrabalhadas)
+                ->set("valor_turno",            $valorTurno)
                 ->where("turno_id",             $userID)
                 ->update();
 
@@ -106,7 +116,7 @@ final class Atividade_model extends Model
             ->get()->getResultArray();
     }
 
-    function get_ativdades_turno($turnoID)
+    function get_atividades_turno($turnoID)
     {
         return $this->db->table("atividades")
             ->select("

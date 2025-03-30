@@ -88,8 +88,20 @@ final class Atividades extends BaseController
     {
         try {
             $turnoID                = $this->session->get("turno_id");
+            $valorHora              = $this->session->get("valor_hora");
 
-            $resposta               = $this->atvM->finalizar_turno($turnoID);
+            $data                   = date("Y-m-d H:i:s");
+
+            $atividade              = $this->atvM->get_turno_aberta($turnoID);
+
+            $retornoCalculo         = calcularValorHoras($atividade["inicio_turno"], $data, $valorHora);
+
+            $resposta               = $this->atvM->finalizar_turno(
+                $turnoID,
+                $data,
+                $retornoCalculo["horasTrabalhadas"],
+                $retornoCalculo["valorFaturado"]
+            );
             if ($resposta["status"]) $this->session->remove("turno_id");
         } catch (\Exception $e) {
             $resposta = [
@@ -128,23 +140,16 @@ final class Atividades extends BaseController
 
             $atividade              = $this->atvM->get_atividade_aberta($turnoID);
 
-            // Cria objetos Time do CI4
-            $inicioAtividade = Time::parse($atividade["inicio_atividade"]);
-            $fimAtividade = Time::parse($dataHora);
+            $retornoCalculo         = calcularValorHoras($atividade["inicio_atividade"], $dataHora, $valorHora);
 
-            // Calcula diferença em segundos
-            $segundosTrabalhados = $fimAtividade->getTimestamp() - $inicioAtividade->getTimestamp();
-
-            // Converte para horas decimais
-            $horasTrabalhadas = $segundosTrabalhados / 3600;
-
-            // Calcula o valor da atividade
-            $valorAtividade = $horasTrabalhadas * $valorHora;
-
-            $horasTrabalhadas = round($horasTrabalhadas, 2);
-            $valorAtividade = number_format($valorAtividade, 2, ',', '.');
-
-            $resposta               = $this->atvM->concluir_atividade($dataHora, $desc, $turnoID, $horasTrabalhadas, $valorHora, $valorAtividade);
+            $resposta               = $this->atvM->concluir_atividade(
+                $dataHora,
+                $desc,
+                $turnoID,
+                $retornoCalculo["horasTrabalhadas"],
+                $valorHora,
+                $retornoCalculo["valorFaturado"]
+            );
         } catch (\Exception $e) {
             $resposta = [
                 "status"            => false,
@@ -161,7 +166,7 @@ final class Atividades extends BaseController
 
             $resposta = [
                 "status"            => true,
-                "data"              => $this->atvM->get_ativdades_turno($turnoID)
+                "data"              => $this->atvM->get_atividades_turno($turnoID)
             ];
         } catch (\Exception $e) {
             $resposta = [

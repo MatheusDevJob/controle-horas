@@ -68,7 +68,7 @@ CREATE TABLE `auditoria_usuarios` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-30 16:18:48
+-- Dump completed on 2025-03-30 18:52:21
 CREATE DATABASE  IF NOT EXISTS `registro_horas` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `registro_horas`;
 -- MySQL dump 10.13  Distrib 8.0.40, for Win64 (x86_64)
@@ -101,10 +101,13 @@ CREATE TABLE `atividades` (
   `inicio_atividade` datetime NOT NULL,
   `fim_atividade` datetime DEFAULT NULL,
   `turno_fk` bigint unsigned NOT NULL,
+  `valor_hora` float DEFAULT NULL,
+  `horas_trabalhadas` float DEFAULT NULL,
+  `valor_atividade` float DEFAULT NULL,
   PRIMARY KEY (`atividade_id`),
   KEY `atividades_turnos_FK` (`turno_fk`),
   CONSTRAINT `atividades_turnos_FK` FOREIGN KEY (`turno_fk`) REFERENCES `turnos` (`turno_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -173,12 +176,14 @@ CREATE TABLE `turnos` (
   `inicio_turno` datetime NOT NULL,
   `fim_turno` datetime DEFAULT NULL,
   `aberto` tinyint(1) NOT NULL DEFAULT '1',
+  `horas_trabalhadas` float DEFAULT NULL,
+  `valor_turno` float DEFAULT NULL,
   PRIMARY KEY (`turno_id`),
   KEY `turnos_clientes_FK` (`cliente_fk`),
   KEY `turnos_usuarios_FK` (`user_fk`),
   CONSTRAINT `turnos_clientes_FK` FOREIGN KEY (`cliente_fk`) REFERENCES `clientes` (`cliente_id`),
   CONSTRAINT `turnos_usuarios_FK` FOREIGN KEY (`user_fk`) REFERENCES `usuarios` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,4 +220,4 @@ CREATE TABLE `usuarios` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-03-30 16:18:48
+-- Dump completed on 2025-03-30 18:52:21
