@@ -22,6 +22,9 @@ $routes->group("sistema", function ($rotas) {
 
     $rotas->post("buscar_projetos",                 'Projetos::getProjetos');
 
+    $rotas->get("visualizar_atividades",            'Atividades::index');
+    $rotas->post("getAtividadesUsuariosAjax",       "Atividades::getAtividadesUsuariosAjax");
+
     $rotas->group("adm", function ($adm) {
         $adm->post("getClientes",                   "Clientes::getClientes");
 

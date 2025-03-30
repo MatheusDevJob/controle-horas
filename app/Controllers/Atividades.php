@@ -3,13 +3,63 @@
 namespace App\Controllers;
 
 use App\Models\Atividade_model;
+use App\Models\Conta_model;
 
 final class Atividades extends BaseController
 {
     private $atvM;
+    private $contaM;
     public function __construct()
     {
         $this->atvM = new Atividade_model();
+        $this->contaM = new Conta_model();
+    }
+
+    function index()
+    {
+        return view("atividades_usuario", [
+            "titulo"                => "Visualizar Usuários"
+        ]);
+    }
+
+
+    public function getAtividadesUsuariosAjax()
+    {
+        $request                = $this->request;
+        $columns                = ['p.projeto', 'a.descricao', 'a.inicio_atividade', 'a.fim_atividade', 't.inicio_turno', 't.fim_turno'];
+        $search                 = $request->getPost('search')['value'] ?? '';
+
+        $orderColumnIndex       = $request->getPost('order')[0]['column'] ?? 0;
+        $orderColumn            = $columns[$orderColumnIndex] ?? "p.projeto";
+        $orderDir               = $request->getPost('order')[0]['dir'] ?? 'asc';
+
+        $start                  = (int) $request->getPost('start');
+        $length                 = (int) $request->getPost('length');
+        $draw                   = (int) $request->getPost('draw');
+
+        $clienteID              = $this->session->get("cliente_id");
+        $userID                 = $this->session->get("user_id");
+
+        $total                  = $this->contaM->countAllAtividadesUser($clienteID, $userID);
+
+        $filtered               = $this->contaM->countAllAtividadesUser($clienteID, $userID, $search);
+
+        $data                   = $this->contaM->getAllAtividadesUser([
+            'search'            => $search,
+            'order_by'          => $orderColumn,
+            'order_dir'         => $orderDir,
+            'start'             => $start,
+            'length'            => $length,
+            'clienteID'         => $clienteID,
+            'userID'         => $userID,
+        ]);
+
+        return $this->response->setJSON([
+            'draw'              => $draw,
+            'recordsTotal'      => $total,
+            'recordsFiltered'   => $filtered,
+            'data'              => $data
+        ]);
     }
 
     function iniciar_turno()
