@@ -71,7 +71,7 @@
 
 <body>
     <button class="btn btn-outline-dark float-end me-2 mt-2" onclick="logout()">Sair</button>
-    <a href="<?= base_url("") ?>" class="btn btn-info float-end me-2 mt-2">Visualizar <i class="fa-solid fa-users"></i></a>
+    <a href="<?= base_url("sistema/adm/visualizar_usuarios") ?>" class="btn btn-info float-end me-2 mt-2">Visualizar <i class="fa-solid fa-users"></i></a>
     <div class="container" style="height: 100vh;">
         <?= $this->renderSection("servico"); ?>
     </div>
