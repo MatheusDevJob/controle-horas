@@ -23,7 +23,7 @@ class SessionTokenFilter implements FilterInterface
         $usuarioModel = new Conta_model();
         $usuario = $usuarioModel->getUserByID($usuarioID);
 
-        if (!$usuario || $usuario['session_token'] !== $tokenSessao) {
+        if (!$usuario || $usuario['session_token'] !== $tokenSessao || $usuario["ativo"] == 0) {
             $session->destroy();
             return redirect()->to('/?token_invalido=1');
         }
