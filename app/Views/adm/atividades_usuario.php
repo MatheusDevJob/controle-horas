@@ -61,6 +61,7 @@
         $('#tabelaAtividades').DataTable({
             processing: true,
             serverSide: true,
+            order: [[4, 'desc']],
             ajax: {
                 url: '/sistema/adm/getAtividadesUsuariosAjax',
                 type: 'POST',
