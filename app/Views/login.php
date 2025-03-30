@@ -14,11 +14,16 @@
     <!-- biblioteca Toastr -->
     <link href="<?= base_url('toastr/toastr.min.css') ?>" rel="stylesheet" />
     <script src="<?= base_url('toastr/toastr.min.js') ?>"></script>
+    <script src="<?= base_url('js/helper.js') ?>"></script>
     <script>
         $(document).ready(function() {
+            if (cnpj) {
+                $("#cnpj").val(cnpj).prop("disabled", true);
+            }
             $('.maskCNPJ').mask('00.000.000/0000-00');
         });
         const spinner = '<i class="fa-solid fa-spinner fa-spin-pulse"></i>';
+        const cnpj = "<?= get_cookie('cnpj') ?>";
 
         function muda_status_botao(id_botao, texto, desabilitar) {
             var botao = $("#" + id_botao);
@@ -69,6 +74,11 @@
                 }
             });
         }
+
+        function removeEmpresa() {
+            apagarCookie('cnpj');
+            window.location.href = "/";
+        }
     </script>
 </head>
 
@@ -81,11 +91,11 @@
                         Sua conta foi acessada em outro navegador. Você foi desconectado por segurança.
                     </div>
                 <?php endif; ?>
-                <?php
-                if (!get_cookie('cnpj')) {
-                    echo '<label for="cnpj" class="form-label">Cnpj:</label>';
-                    echo '<input type="text" class="form-control maskCNPJ" id="cnpj">';
-                } ?>
+                <div class="d-flex justify-content-between">
+                    <label for="cnpj" class="form-label">Cnpj:</label>
+                    <button class="btn btn-sm btn-outline-warning mb-2" onclick="removeEmpresa()">Apagar</button>
+                </div>
+                <input type="text" class="form-control maskCNPJ" id="cnpj">
                 <label for="usuario" class="form-label">Usuário:</label>
                 <input type="text" class="form-control" id="usuario">
                 <label for="senha" class="form-label">Senha:</label>
