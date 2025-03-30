@@ -14,6 +14,7 @@ final class Projetos_model extends Model
                 p.projeto,
             ")
             ->where("p.cliente_fk",             $clienteID)
+            ->where("p.ativo",                  1)
             ->get()->getResultArray();
     }
 }

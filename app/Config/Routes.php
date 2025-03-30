@@ -31,5 +31,10 @@ $routes->group("sistema", function ($rotas) {
         $adm->get("visualizar_usuarios",            "adm\Atividades::index");
         $adm->post("getUsuariosAjax",               "adm\Atividades::getUsuariosAjax");
         $adm->post("getAtividadesUsuariosAjax",     "adm\Atividades::getAtividadesUsuariosAjax");
+        
+        $adm->get("visualizar_projetos",            "adm\Projetos::index");
+        $adm->post("getProjetosAjax",               "adm\Projetos::getProjetosAjax");
+        $adm->post("muda_status_projeto",           "adm\Projetos::mudaStatusProjeto");
+        $adm->post("cadastrar_projeto",             "adm\Projetos::cadastrar");
     });
 });

@@ -87,16 +87,19 @@
         <?php if ($_SESSION['tipo_usuario_fk'] == 1): ?>
             <li class="nav-item">
                 <a href="<?= base_url("sistema/adm/visualizar_usuarios") ?>" class="nav-link" aria-current="page">
-                    <i class="fa-solid fa-users"></i> Visualizar Colaboradores
+                    <i class="fa-solid fa-users"></i> Colaboradores
                 </a>
-            </li> <?php endif; ?>
+            </li>
+            <li class="nav-item">
+                <a href="<?= base_url("sistema/adm/visualizar_projetos") ?>" class="nav-link" aria-current="page">
+                    <i class="fa-solid fa-folder-open"></i> Projetos
+                </a>
+            </li>
+        <?php endif; ?>
         <li class="nav-item">
             <a href="<?= base_url("sistema/visualizar_atividades") ?>" class="nav-link">
-                <i class="fa-solid fa-clipboard-list"></i> Visualizar Atividades
+                <i class="fa-solid fa-clipboard-list"></i> Atividades
             </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
         </li>
     </ul>
     <button class="btn btn-outline-dark float-end me-2 mt-2" onclick="logout()">Sair</button>
