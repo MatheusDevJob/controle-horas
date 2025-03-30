@@ -39,6 +39,7 @@ final class Atividades extends BaseController
             $turnoID                = $this->session->get("turno_id");
 
             $resposta               = $this->atvM->finalizar_turno($turnoID);
+            if ($resposta["status"]) $this->session->remove("turno_id");
         } catch (\Exception $e) {
             $resposta = [
                 "status"            => false,
@@ -74,7 +75,6 @@ final class Atividades extends BaseController
             $turnoID                = $this->session->get("turno_id");
 
             $resposta               = $this->atvM->concluir_atividade($dataHora, $desc, $turnoID);
-            if ($resposta["status"]) $this->session->remove("turno_id");
         } catch (\Exception $e) {
             $resposta = [
                 "status"            => false,
