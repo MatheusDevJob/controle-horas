@@ -15,6 +15,11 @@
     <link href="<?= base_url('toastr/toastr.min.css') ?>" rel="stylesheet" />
     <script src="<?= base_url('toastr/toastr.min.js') ?>"></script>
     <script>
+        $(document).ready(function() {
+            $('.maskMoney').mask('#.##0,00', {
+                reverse: true
+            });
+        })
         const spinner = '<i class="fa-solid fa-spinner fa-spin-pulse"></i>';
 
         function muda_status_botao(id_botao, texto, desabilitar) {
@@ -28,6 +33,7 @@
             const senha = $("#senha").val();
             const userNome = $("#userNome").val();
             const cliente = $("#cliente").val();
+            const valorHora = $("#valorHora").val();
 
             if (!usuario) {
                 $("#usuario").focus()
@@ -44,6 +50,11 @@
                 return;
             }
 
+            if (!valorHora) {
+                $("#valorHora").focus()
+                return;
+            }
+
             muda_status_botao("botaoRegistrar", "", true)
 
             $.ajax({
@@ -54,6 +65,7 @@
                     usuario,
                     senha,
                     cliente,
+                    valorHora,
                     userNome
                 },
                 success: function(response) {
@@ -101,6 +113,13 @@
                 <div class="col">
                     <label for="userNome" class="form-label">Nome Usuário:</label>
                     <input type="text" class="form-control" id="userNome">
+                </div>
+                <div class="col-2">
+                    <label for="valorHora" class="form-label">Valor Hora:</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">R$</span>
+                        <input type="text" class="form-control maskMoney" id="valorHora">
+                    </div>
                 </div>
             </div>
             <button class="btn btn-primary mt-2 float-end" onclick="cadastrar()" id="botaoRegistrar">Registrar</button>

@@ -102,13 +102,16 @@ class Home extends BaseController
         $senha                  = $this->request->getPost("senha");
         $userNome               = $this->request->getPost("userNome");
         $cliente64              = $this->request->getPost("cliente");
+        $valorHora              = $this->request->getPost("valorHora");
         $clienteID              = base64_decode($cliente64);
 
         $senha                  = password_hash($senha, PASSWORD_BCRYPT);
+        $valorHora              = str_replace(".", "", $valorHora);
+        $valorHora              = str_replace(",", ".", $valorHora);
 
 
         try {
-            $resposta           = $this->contaM->cadastrar($usuario, $senha, $userNome, $clienteID);
+            $resposta           = $this->contaM->cadastrar($usuario, $senha, $userNome, $clienteID, $valorHora);
         } catch (\Exception $e) {
             $resposta           = ["status" => false, "msg" => $e->getMessage()];
         }

@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 
 final class Conta_model extends Model
 {
-    function cadastrar($usuario, $senha, $userNome, $clienteID)
+    function cadastrar($usuario, $senha, $userNome, $clienteID, $valorHora)
     {
         try {
             $this->db->table("usuarios")
@@ -14,6 +14,7 @@ final class Conta_model extends Model
                 ->set("senha",              $senha)
                 ->set("user_nome",          $userNome)
                 ->set("cliente_fk",         $clienteID)
+                ->set("valor_hora",         $valorHora)
                 ->set("data_registro",      date("Y-m-d H:i:s"))
                 ->insert();
 
