@@ -14,6 +14,9 @@
     <!-- biblioteca Toastr -->
     <link href="<?= base_url('toastr/toastr.min.css') ?>" rel="stylesheet" />
     <script src="<?= base_url('toastr/toastr.min.js') ?>"></script>
+    <link href="<?= base_url('datatable/datatables.min.css') ?>" rel="stylesheet" />
+    <script src="<?= base_url('datatable/datatables.min.js') ?>"></script>
+
     <script>
         $(document).ready(function() {
             $('.number_only').mask('0#');
@@ -59,10 +62,16 @@
             })
         }
     </script>
+    <style>
+        body {
+            background-color: #EBE6DF;
+        }
+    </style>
 </head>
 
 <body>
     <button class="btn btn-outline-dark float-end me-2 mt-2" onclick="logout()">Sair</button>
+    <a href="<?= base_url("") ?>" class="btn btn-info float-end me-2 mt-2">Visualizar <i class="fa-solid fa-users"></i></a>
     <div class="container" style="height: 100vh;">
         <?= $this->renderSection("servico"); ?>
     </div>
