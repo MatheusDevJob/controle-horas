@@ -16,6 +16,11 @@
     <div class="card p-4">
         <div class="d-flex justify-content-end">
             <button
+                class="btn btn-success me-2"
+                id="botaoCriarNovaAtividade"
+                style="display: none;"
+                onclick="criarNovaAtividade()">Iniciar Atividade</button>
+            <button
                 class="btn btn-dark me-2"
                 id="botaoConcluirTurno"
                 style="display: none;"
@@ -92,10 +97,8 @@
             const JQueryXHR = await iniciarTurno(data);
             if (!JQueryXHR.status) throw new Error("Não foi possível iniciar o turno");
 
-            const inicioAtividade = await iniciarAtividade(data);
-            if (!inicioAtividade.status) throw new Error("Erro a registrar atividade");
+            await iniciarNovaAtividade(idUnico, data)
 
-            montaAtividade(idUnico, data);
             $("#botaoConcluirTurno").show()
         } catch (error) {
             toastr.error(`Erro ${error}.`);
@@ -135,9 +138,9 @@
             if (!atividade.status) throw new Error("Erro ao concluir atividade");
 
             if (novaAtividade) {
-                const inicioAtividade = await iniciarAtividade(data);
-                if (!inicioAtividade.status) throw new Error("Erro ao registrar nova atividade");
-                montaAtividade(idUnico, data);
+                await iniciarNovaAtividade(idUnico, data)
+            } else {
+                $("#botaoCriarNovaAtividade").show();
             }
 
             td.html(data);
@@ -148,6 +151,26 @@
             toastr.error(`Erro ${error}.`);
             console.error(error);
         }
+    }
+
+    async function criarNovaAtividade() {
+        try {
+            const idUnico = Date.now();
+            const data = obterDataHoraFormatada();
+            muda_status_botao("botaoCriarNovaAtividade", "", true)
+            await iniciarNovaAtividade(idUnico, data);
+            muda_status_botao("botaoCriarNovaAtividade", "Iniciar Atividade", false)
+            $("#botaoCriarNovaAtividade").hide();
+        } catch (error) {
+            toastr.error(`Erro ${error}.`);
+            console.error(error);
+        }
+    }
+
+    async function iniciarNovaAtividade(idUnico, data) {
+        const inicioAtividade = await iniciarAtividade(data);
+        if (!inicioAtividade.status) throw new Error("Erro ao registrar nova atividade");
+        montaAtividade(idUnico, data);
     }
 
     function iniciarTurno(data) {
@@ -242,6 +265,7 @@
                     toastr.success(response.msg)
                     $("#botaoCriarAtividade").attr("disabled", false)
                     $("#botaoConcluirTurno").hide()
+                    $("#botaoCriarNovaAtividade").hide();
                 } else {
                     toastr.warning(response.msg)
                 }

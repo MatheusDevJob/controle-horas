@@ -36,6 +36,8 @@ final class Conta_model extends Model
                 u.user_nome,
                 u.usuario,
                 u.tipo_usuario_fk,
+                u.session_token,
+                u.ativo,
                 u.valor_hora
             ")
             ->where("user_id", $userID)
