@@ -1,15 +1,24 @@
 <?= $this->extend("template/template"); ?>
 <?= $this->section("servico"); ?>
+<style>
+    tbody tr td:not(:nth-child(2)) {
+        white-space: nowrap;
+        text-align: center !important;
+    }
+</style>
 <div class="pt-3">
     <table class="table table-hover" id="tabelaAtividades">
         <thead>
             <tr>
-                <th class="col-2 text-start">Projeto</th>
-                <th class="col">Descrição</th>
-                <th class="col-2">Início Atv.</th>
-                <th class="col-2">Fim Atv.</th>
-                <th class="col-2">Início Turno</th>
-                <th class="col-2">Fim Turno</th>
+                <th>Projeto</th>
+                <th>Descrição</th>
+                <th>Início Atv.</th>
+                <th>Fim Atv.</th>
+                <th>Início Turno</th>
+                <th>Fim Turno</th>
+                <th>Trabalhadas</th>
+                <th>R$/hora</th>
+                <th>Total</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -25,6 +34,7 @@
         $('#tabelaAtividades').DataTable({
             processing: true,
             serverSide: true,
+            scrollX: true,
             order: [
                 [4, 'desc']
             ],
@@ -44,6 +54,12 @@
                 data: 'inicio_turno'
             }, {
                 data: 'fim_turno'
+            }, {
+                data: 'horas_trabalhadas'
+            }, {
+                data: 'valor_hora'
+            }, {
+                data: 'valor_atividade'
             }]
         });
     }

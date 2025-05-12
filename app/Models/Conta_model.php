@@ -107,6 +107,9 @@ final class Conta_model extends Model
             p.projeto,
             DATE_FORMAT(t.inicio_turno, '%d/%m/%Y %H:%i:%s') as inicio_turno,
             COALESCE(DATE_FORMAT(t.fim_turno, '%d/%m/%Y %H:%i:%s'), '-') as fim_turno,
+            TIME_FORMAT(SEC_TO_TIME(a.horas_trabalhadas * 3600), '%H:%i:%s') AS horas_trabalhadas,
+            CONCAT('R$ ', valor_hora) as valor_hora,
+            CONCAT('R$ ', valor_atividade) as valor_atividade,
         ");
         $db->join('turnos t', 't.turno_id = a.turno_fk');
         $db->join('projetos p', 't.projeto_fk = p.projeto_id');
