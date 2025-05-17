@@ -80,13 +80,21 @@ final class Conta_model extends Model
             ->update();
     }
 
-    public function countAllAtividadesUser($clienteID, $userID, $search = null): int
+    public function countAllAtividadesUser($clienteID, $userID, $search = null, $dataI = null, $dataF = null, $projetoID = null): int
     {
         $db = $this->db->table('atividades a');
         $db->join('turnos t', 't.turno_id = a.turno_fk');
         $db->join('projetos p', 't.projeto_fk = p.projeto_id');
         $db->where("t.cliente_fk", $clienteID);
         $db->where('t.user_fk', $userID);
+        if ($dataI && $dataF) {
+            $db->where("a.inicio_atividade >= ", $dataI);
+            $db->where("a.inicio_atividade <= ", $dataF);
+        }
+
+        if ($projetoID)
+            $db->where("t.projeto_fk", $projetoID);
+
         if (!empty($search)) {
             $db->groupStart();
             $db->like('a.descricao', $search);
@@ -115,6 +123,12 @@ final class Conta_model extends Model
         $db->join('projetos p', 't.projeto_fk = p.projeto_id');
         $db->where('t.cliente_fk', $params['clienteID']);
         $db->where('t.user_fk', $params['userID']);
+        if (!empty($params['dataI']) && !empty($params["dataF"])) {
+            $db->where("a.inicio_atividade >= ", "{$params['dataI']} 00:00:00");
+            $db->where("a.inicio_atividade <= ", "{$params["dataF"]} 23:59:59");
+        }
+        if (!empty($params["projetoID"]))
+            $db->where("t.projeto_fk", $params["projetoID"]);
         if (!empty($params['search'])) {
             $db->groupStart();
             $db->like('a.descricao', $params['search']);

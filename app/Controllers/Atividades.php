@@ -4,22 +4,27 @@ namespace App\Controllers;
 
 use App\Models\Atividade_model;
 use App\Models\Conta_model;
+use App\Models\Projetos_model;
 use CodeIgniter\I18n\Time;
 
 final class Atividades extends BaseController
 {
     private $atvM;
     private $contaM;
+    protected $projetoM;
     public function __construct()
     {
-        $this->atvM = new Atividade_model();
-        $this->contaM = new Conta_model();
+        $this->atvM                 = new Atividade_model();
+        $this->contaM               = new Conta_model();
+        $this->projetoM             = new Projetos_model();
     }
 
     function index()
     {
+        $clienteID                  = $this->session->get("cliente_id");
         return view("atividades_usuario", [
-            "titulo"                => "Visualizar Usuários"
+            "titulo"                => "Visualizar Usuários",
+            "projetos"              => $this->projetoM->getProjetos($clienteID)
         ]);
     }
 
@@ -37,13 +42,17 @@ final class Atividades extends BaseController
         $start                  = (int) $request->getPost('start');
         $length                 = (int) $request->getPost('length');
         $draw                   = (int) $request->getPost('draw');
+        $dataI                  = $request->getPost("dataI");
+        $dataF                  = $request->getPost("dataF");
+        $projeto64              = $request->getPost("projeto");
+        $projetoID              = base64_decode($projeto64);
 
         $clienteID              = $this->session->get("cliente_id");
         $userID                 = $this->session->get("user_id");
 
-        $total                  = $this->contaM->countAllAtividadesUser($clienteID, $userID);
+        $total                  = $this->contaM->countAllAtividadesUser($clienteID, $userID, null, $dataI, $dataF, $projetoID);
 
-        $filtered               = $this->contaM->countAllAtividadesUser($clienteID, $userID, $search);
+        $filtered               = $this->contaM->countAllAtividadesUser($clienteID, $userID, $search, $dataI, $dataF, $projetoID);
 
         $data                   = $this->contaM->getAllAtividadesUser([
             'search'            => $search,
@@ -52,7 +61,10 @@ final class Atividades extends BaseController
             'start'             => $start,
             'length'            => $length,
             'clienteID'         => $clienteID,
-            'userID'         => $userID,
+            'userID'            => $userID,
+            'dataI'             => $dataI,
+            'dataF'             => $dataF,
+            'projetoID'         => $projetoID,
         ]);
 
         return $this->response->setJSON([

@@ -4,14 +4,16 @@ namespace App\Controllers\adm;
 
 use App\Controllers\BaseController;
 use App\Models\adm\Conta_model;
-use App\Models\Atividade_model;
+use App\Models\Conta_model as ModelsConta_model;
 
 final class Atividades extends BaseController
 {
+    private $contaAdmM;
     private $contaM;
     public function __construct()
     {
-        $this->contaM = new Conta_model();
+        $this->contaAdmM = new Conta_model();
+        $this->contaM = new ModelsConta_model();
     }
 
     function index()
@@ -37,11 +39,11 @@ final class Atividades extends BaseController
 
         $clienteID              = $this->session->get("cliente_id");
 
-        $total                  = $this->contaM->countAllUser($clienteID);
+        $total                  = $this->contaAdmM->countAllUser($clienteID);
 
-        $filtered               = $this->contaM->countAllUser($clienteID, $search);
+        $filtered               = $this->contaAdmM->countAllUser($clienteID, $search);
 
-        $data                   = $this->contaM->getAllUser([
+        $data                   = $this->contaAdmM->getAllUser([
             'search'            => $search,
             'order_by'          => $orderColumn,
             'order_dir'         => $orderDir,
@@ -91,7 +93,7 @@ final class Atividades extends BaseController
             'start'             => $start,
             'length'            => $length,
             'clienteID'         => $clienteID,
-            'userID'         => $userID,
+            'userID'            => $userID,
         ]);
 
         return $this->response->setJSON([

@@ -5,8 +5,38 @@
         white-space: nowrap;
         text-align: center !important;
     }
+
+    #dataI,
+    #dataF {
+        width: 40% !important;
+    }
 </style>
 <div class="pt-3">
+    <div class="row">
+        <div class="col-2">
+            <?= view("utility/exportar_xlsx") ?>
+        </div>
+        <div class="col-5">
+            <label for="dataI" class="form-label">De</label>
+            <input type="date" class="form-control form-control-sm d-inline" id="dataI">
+            <label for="dataF" class="form-label">até</label>
+            <input type="date" class="form-control form-control-sm d-inline" id="dataF">
+        </div>
+        <div class="col-3">
+            <label for="projeto" class="form-label">Projeto</label>
+            <select id="projeto" class="form-select form-select-sm d-inline w-50">
+                <option value="">Selecione</option>
+                <?php
+                foreach ($projetos as $value) {
+                    echo "<option value=\"{$value["projeto_id"]}\">{$value["projeto"]}</option>";
+                }
+                ?>
+            </select>
+        </div>
+        <div class="col-1">
+            <button class="btn btn-sm btn-primary" onclick="reload()">Buscar</button>
+        </div>
+    </div>
     <table class="table table-hover" id="tabelaAtividades">
         <thead>
             <tr>
@@ -28,10 +58,25 @@
 <script>
     $(document).ready(function() {
         carregarTabelaAtividades();
+        $("#dataI").on("change", function() {
+            dataI = this.value;
+        });
+        $("#dataF").on("change", function() {
+            dataF = this.value;
+        });
+        $("#projeto").on("change", function() {
+            projeto = this.value;
+        });
     });
 
+    let dataI, dataF, projeto, tabelaAtividades;
+
+    function reload() {
+        tabelaAtividades.search($("#dt-search-0").val()).draw();
+    }
+
     function carregarTabelaAtividades() {
-        $('#tabelaAtividades').DataTable({
+        tabelaAtividades = $('#tabelaAtividades').DataTable({
             processing: true,
             serverSide: true,
             scrollX: true,
@@ -41,6 +86,11 @@
             ajax: {
                 url: '/sistema/getAtividadesUsuariosAjax',
                 type: 'POST',
+                data: function(d) {
+                    d.dataI = $("#dataI").val();
+                    d.dataF = $("#dataF").val();
+                    d.projeto = $("#projeto").val();
+                }
             },
             columns: [{
                 data: 'projeto'
@@ -72,7 +122,6 @@
         if (!$.fn.dataTable.isDataTable('#tabelaAtividades')) carregarTabelaAtividades()
         else $('#tabelaAtividades').DataTable().search('').draw();
 
-        $("#tabelaAtividades").show()
     }
 </script>
 <?= $this->endSection(); ?>

@@ -18,6 +18,8 @@
     <script src="<?= base_url('datatable/datatables.min.js') ?>"></script>
     <script src="<?= base_url("js/helper.js") ?>"></script>
 
+    <script src="<?= base_url("sheet-js/xlsx.full.min.js") ?>"></script>
+
     <script>
         $(document).ready(function() {
             $('.number_only').mask('0#');
