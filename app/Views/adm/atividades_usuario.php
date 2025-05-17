@@ -15,12 +15,14 @@
     <table class="table table-hover" id="tabelaAtividades" style="display: none;">
         <thead>
             <tr>
-                <th class="col-2 text-start">Projeto</th>
-                <th class="col">Descrição</th>
-                <th class="col-2">Início Atv.</th>
-                <th class="col-2">Fim Atv.</th>
-                <th class="col-2">Início Turno</th>
-                <th class="col-2">Fim Turno</th>
+                <th class="col-1 align-middle text-start">Projeto</th>
+                <th class="col align-middle">Descrição</th>
+                <th class="col-1 align-middle text-center">Início Atv.</th>
+                <th class="col-1 align-middle text-center">Fim Atv.</th>
+                <th class="col-1 align-middle text-center">Início Turno</th>
+                <th class="col-1 align-middle text-center">Fim Turno</th>
+                <th class="col-1 align-middle">R$/hora</th>
+                <th class="col-1 align-middle">Total</th>
             </tr>
         </thead>
         <tbody></tbody>
@@ -61,7 +63,9 @@
         $('#tabelaAtividades').DataTable({
             processing: true,
             serverSide: true,
-            order: [[4, 'desc']],
+            order: [
+                [4, 'desc']
+            ],
             ajax: {
                 url: '/sistema/adm/getAtividadesUsuariosAjax',
                 type: 'POST',
@@ -69,6 +73,10 @@
                     d.userID = userID;
                 }
             },
+            columnDefs: [{
+                targets: [6, 7],
+                className: 'text-center align-middle'
+            }],
             columns: [{
                 data: 'projeto'
             }, {
@@ -81,6 +89,10 @@
                 data: 'inicio_turno'
             }, {
                 data: 'fim_turno'
+            }, {
+                data: 'valor_hora'
+            }, {
+                data: 'valor_atividade'
             }]
         });
     }
