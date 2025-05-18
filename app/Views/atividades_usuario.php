@@ -54,6 +54,8 @@
         <tbody></tbody>
     </table>
 </div>
+<h3>Horas Trabalhadas: <span id="campoTotalHoras" class="fw-bold text-primary"></span></h3>
+
 
 <script>
     $(document).ready(function() {
@@ -90,6 +92,10 @@
                     d.dataI = $("#dataI").val();
                     d.dataF = $("#dataF").val();
                     d.projeto = $("#projeto").val();
+                },
+                dataSrc: function(json) {
+                    $('#campoTotalHoras').text(json.totalHoras.total_geral_horas || '00:00:00');
+                    return json.data;
                 }
             },
             columns: [{

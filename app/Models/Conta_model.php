@@ -140,6 +140,32 @@ final class Conta_model extends Model
         return $db->get()->getResultArray();
     }
 
+    public function getHorasTrabalhas(array $params): array
+    {
+        $db = $this->db->table('atividades a');
+        $db->select("
+            TIME_FORMAT(SEC_TO_TIME(SUM(a.horas_trabalhadas * 3600)), '%H:%i:%s') as total_geral_horas
+        ");
+        $db->join('turnos t', 't.turno_id = a.turno_fk');
+        $db->join('projetos p', 't.projeto_fk = p.projeto_id');
+        $db->where('t.cliente_fk', $params['clienteID']);
+        $db->where('t.user_fk', $params['userID']);
+        if (!empty($params['dataI']) && !empty($params["dataF"])) {
+            $db->where("a.inicio_atividade >= ", "{$params['dataI']} 00:00:00");
+            $db->where("a.inicio_atividade <= ", "{$params["dataF"]} 23:59:59");
+        }
+        if (!empty($params["projetoID"]))
+            $db->where("t.projeto_fk", $params["projetoID"]);
+        if (!empty($params['search'])) {
+            $db->groupStart();
+            $db->like('a.descricao', $params['search']);
+            $db->orLike('p.projeto', $params['search']);
+            $db->groupEnd();
+        }
+        $db->limit($params['length'], $params['start']);
+        return $db->get()->getRowArray();
+    }
+
     function atualizaratualizar($userID, $userNome, $valorHora, $clienteID, $tipoUsuarioID): bool
     {
         $this->db->transStart();

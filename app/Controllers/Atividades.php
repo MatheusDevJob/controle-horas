@@ -67,10 +67,22 @@ final class Atividades extends BaseController
             'projetoID'         => $projetoID,
         ]);
 
+        $totalHoras             = $this->contaM->getHorasTrabalhas([
+            'search'            => $search,
+            'start'             => $start,
+            'length'            => $length,
+            'clienteID'         => $clienteID,
+            'userID'            => $userID,
+            'dataI'             => $dataI,
+            'dataF'             => $dataF,
+            'projetoID'         => $projetoID,
+        ]);
+
         return $this->response->setJSON([
             'draw'              => $draw,
             'recordsTotal'      => $total,
             'recordsFiltered'   => $filtered,
+            'totalHoras'        => $totalHoras,
             'data'              => $data
         ]);
     }
