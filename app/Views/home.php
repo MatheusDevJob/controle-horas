@@ -63,18 +63,29 @@
             dataType: "JSON",
             success: function(response) {
                 if (response.status) {
-                    $("#botaoConcluirTurno").show()
-                    $.each(response.data, function(i, val) {
-                        const idUnico = Date.now();
-                        montaAtividade(idUnico, val.inicio_atividade)
-                        console.log(val);
+                    $("#botaoConcluirTurno").show();
 
-                        $("#id" + idUnico).val(val.descricao)
-                        if (val.fim_atividade) {
+                    let existeAlgumaAberta = false;
+                    const ehAberta = (fim) => fim == null || fim === "" || fim === "0000-00-00 00:00:00";
+
+                    $.each(response.data || [], function(i, val) {
+                        const idUnico = String(Date.now()) + i;
+                        montaAtividade(idUnico, val.inicio_atividade);
+
+                        $("#id" + idUnico).val(val.descricao);
+
+                        if (ehAberta(val.fim_atividade)) {
+                            // está em aberto
+                            existeAlgumaAberta = true;
+                        } else {
+                            // concluída
                             $("#botoes" + idUnico).html(val.fim_atividade);
-                            $("#id" + idUnico).attr("disabled", true);
+                            $("#id" + idUnico).prop("disabled", true);
                         }
                     });
+
+                    // Se NÃO houver nenhuma aberta, dispara exibição do botão de nova atividade
+                    $("#botaoCriarNovaAtividade").toggle(!existeAlgumaAberta);
                 } else {
                     muda_status_botao("botaoCriarAtividade", "Iniciar Turno", false)
                     toastr.warning(response.msg)
