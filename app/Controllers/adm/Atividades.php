@@ -5,21 +5,25 @@ namespace App\Controllers\adm;
 use App\Controllers\BaseController;
 use App\Models\adm\Conta_model;
 use App\Models\Conta_model as ModelsConta_model;
+use App\Models\TiposContaModel;
 
 final class Atividades extends BaseController
 {
     private $contaAdmM;
     private $contaM;
+    private $tipoUsuarioM;
     public function __construct()
     {
         $this->contaAdmM = new Conta_model();
         $this->contaM = new ModelsConta_model();
+        $this->tipoUsuarioM = new TiposContaModel();
     }
 
     function index()
     {
         return view("adm/atividades_usuario", [
-            "titulo"                => "Visualizar Usuários"
+            "titulo"                => "Visualizar Usuários",
+            "tiposUsuarios"         => $this->tipoUsuarioM->findAll()
         ]);
     }
 
@@ -32,7 +36,7 @@ final class Atividades extends BaseController
         $orderColumnIndex       = $request->getPost('order')[0]['column'] ?? 0;
         $orderColumn            = $columns[$orderColumnIndex] ?? "user_nome";
         $orderDir               = $request->getPost('order')[0]['dir'] ?? 'asc';
-
+        
         $start                  = (int) $request->getPost('start');
         $length                 = (int) $request->getPost('length');
         $draw                   = (int) $request->getPost('draw');

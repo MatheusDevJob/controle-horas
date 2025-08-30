@@ -31,7 +31,8 @@ class Home extends BaseController
     {
         return view('home', [
             "titulo"    => "Home",
-            "turnoID"   => $this->session->get("turno_id")
+            "turnoID"   => $this->session->get("turno_id"),
+            "trabalhando" => session("trabalhando_em")
         ]);
     }
 
@@ -100,12 +101,11 @@ class Home extends BaseController
 
     public function cadastrar_usuario()
     {
-        $usuario                = $this->request->getPost("usuario");
+        $usuario                = $this->request->getPost("login");
         $senha                  = $this->request->getPost("senha");
-        $userNome               = $this->request->getPost("userNome");
-        $cliente64              = $this->request->getPost("cliente");
-        $valorHora              = $this->request->getPost("valorHora");
-        $clienteID              = base64_decode($cliente64);
+        $userNome               = $this->request->getPost("nome");
+        $valorHora              = $this->request->getPost("valor_hora");
+        $clienteID              = session('cliente_id');
 
         $senha                  = password_hash($senha, PASSWORD_BCRYPT);
         $valorHora              = str_replace(".", "", $valorHora);
@@ -135,7 +135,8 @@ class Home extends BaseController
 
     function get_usuario_by_id()
     {
-        $userID                 = $this->session->get("user_id");
+        $userID                 = $this->request->getPost("userID");
+        $userID                 = base64_decode($userID);
         $resposta               = $this->contaM->getUserByID($userID);
 
         return $this->response->setJSON($resposta, true);
@@ -143,16 +144,41 @@ class Home extends BaseController
 
     function atualizar_usuario()
     {
+        $userID                 = $this->request->getPost("userID") ?? session("user_id");
+        $nome                   = $this->request->getPost("nome");
+        $tipo_usuario_id        = $this->request->getPost("tipo_usuario_id");
+        $status                 = $this->request->getPost("status");
+        $senha                  = $this->request->getPost("senha");
+
         $userNome               = $this->request->getPost("user_nome");
         $valorHora              = $this->request->getPost("valor_hora");
 
         $clienteID              = $this->session->get("cliente_id");
-        $userID                 = $this->session->get("user_id");
-        $userNome               = $this->session->get("user_nome");
         $tipoUsuarioID          = $this->session->get("tipo_usuario_fk");
 
-        $resposta               = $this->contaM->atualizaratualizar($userID, $userNome, $valorHora, $clienteID, $tipoUsuarioID);
+        if (!is_numeric($userID)) $userID = base64_decode($userID);
 
-        return $this->response->setJSON($resposta, true);
+        if ($valorHora && $userID != session("user_id")) {
+            return $this->response->setJSON([
+                "status" => false,
+                "msg"   => "Você não tem permissão para alterar o valor da hora."
+            ], true);
+        }
+
+
+
+        $data = [
+            "user_nome"                 => $nome,
+            "valor_hora"                => $valorHora,
+            "tipo_usuario_fk"           => $tipo_usuario_id,
+            "ativo"                     => $status,
+        ];
+
+        if (!empty($senha))
+            $data["senha"] =  password_hash($senha, PASSWORD_BCRYPT);
+
+        $resposta               = $this->contaM->atualizaratualizar($data, $userID, $clienteID, session("user_id"), $tipoUsuarioID);
+
+        return $this->response->setJSON(["status" => $resposta], true);
     }
 }

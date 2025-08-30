@@ -96,6 +96,8 @@ final class Atividades extends BaseController
             $clienteID                          = $this->session->get("cliente_id");
             $userID                             = $this->session->get("user_id");
 
+            session()->set("trabalhando_em", $projeto64);
+
             $resposta                           = $this->atvM->iniciar_turno($clienteID, $projetoID, $userID);
             $this->session->set("turno_id",     $resposta["id"]);
             unset($resposta["id"]);
@@ -126,7 +128,7 @@ final class Atividades extends BaseController
                 $retornoCalculo["horasTrabalhadas"],
                 $retornoCalculo["valorFaturado"]
             );
-            if ($resposta["status"]) $this->session->remove("turno_id");
+            if ($resposta["status"]) session()->remove(["turno_id", "trabalhando_em"]);
         } catch (\Exception $e) {
             $resposta = [
                 "status"            => false,

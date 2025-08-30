@@ -166,14 +166,11 @@ final class Conta_model extends Model
         return $db->get()->getRowArray();
     }
 
-    function atualizaratualizar($userID, $userNome, $valorHora, $clienteID, $tipoUsuarioID): bool
+    function atualizaratualizar($mudanca, $userID, $clienteID, $quemFez, $tipoQuemFezID): bool
     {
         $this->db->transStart();
         $db = $this->db->table("usuarios")
-            ->set([
-                "user_nome"                 => $userNome,
-                "valor_hora"                => $valorHora,
-            ])
+            ->set($mudanca)
             ->where("user_id", $userID);
         $sql = $db->getCompiledUpdate(false);
         $db->update();
@@ -185,20 +182,16 @@ final class Conta_model extends Model
             return false;
         }
 
-        $auditoria = json_encode([
-            "user_nome"                     => $userNome,
-            "valor_hora"                    => $valorHora,
-            "cliente_id"                    => $clienteID
-        ], JSON_UNESCAPED_UNICODE);
+        $mudanca["cliente_id"] = $clienteID;
+        $auditoria = json_encode($mudanca, JSON_UNESCAPED_UNICODE);
 
-        $db = $this->db->table("auditoria_registro_horas.auditoria_usuarios")
+        $db = $this->db->table("auditoria_usuarios")
             ->set([
                 "operacao"                  => "atualização",
                 "dados"                     => $auditoria,
-                "usuario_fk"                => $userID,
-                "usuario_nome"              => $userNome,
-                "usuario_tipo_fk"           => $tipoUsuarioID,
-                "user_fk"                => $this->db->insertID(),
+                "quem_fez"                  => $quemFez,
+                "tipo_quem_fez"             => $tipoQuemFezID,
+                "user_fk"                   => $userID,
             ]);
         $sql = $db->getCompiledInsert(false);
         $db->insert();

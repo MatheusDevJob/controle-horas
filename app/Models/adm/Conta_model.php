@@ -10,7 +10,7 @@ final class Conta_model extends Model
     {
         $db = $this->db->table('usuarios');
         $db->where("cliente_fk", $clienteID);
-        if (!empty($search)) $db->like('nome', $search);
+        if (!empty($search)) $db->like('user_nome', $search);
         return $db->countAllResults();
     }
 

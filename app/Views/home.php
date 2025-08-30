@@ -1,48 +1,48 @@
 <?= $this->extend("template/template"); ?>
 <?= $this->section("servico"); ?>
 <div class="h-100 pt-3">
-    <div class="filtros">
-        <div class="row">
-            <div class="col-2">
-                <label for="projetoSelect" class="form-label">Projeto:</label>
-                <span id="spinner"></span>
-                <select style="display: none;" id="projeto" class="form-select mb-2">
-
-                </select>
+    <div class="card mb-3">
+        <div class="card-header d-flex align-items-center gap-2">
+            <i class="fa-solid fa-filter text-primary"></i>
+            <strong>Trabalhando para:</strong>
+        </div>
+        <div class="card-body">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-4 col-lg-3">
+                    <label for="projeto" class="form-label">Projeto</label>
+                    <div class="input-group">
+                        <span class="input-group-text" id="spinner" style="display:none">
+                            <i class="fa-solid fa-spinner fa-spin-pulse"></i>
+                        </span>
+                        <select id="projeto" class="form-select" style="display:none"></select>
+                    </div>
+                </div>
             </div>
-            <div class="col-2"></div>
         </div>
     </div>
-    <div class="card p-4">
-        <div class="d-flex justify-content-end">
-            <button
-                class="btn btn-success me-2"
-                id="botaoCriarNovaAtividade"
-                style="display: none;"
-                onclick="criarNovaAtividade()">Iniciar Atividade</button>
-            <button
-                class="btn btn-dark me-2"
-                id="botaoConcluirTurno"
-                style="display: none;"
-                onclick="concluirTurno()">Concluir Turno</button>
-            <button
-                class="btn btn-primary"
-                id="botaoCriarAtividade"
-                onclick="criarAtividade($(this))">Iniciar Turno</button>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-end gap-2">
+            <button class="btn btn-success" id="botaoCriarNovaAtividade" style="display:none" onclick="criarNovaAtividade()">Iniciar Atividade</button>
+            <button class="btn btn-dark" id="botaoConcluirTurno" style="display:none" onclick="concluirTurno()">Concluir Turno</button>
+            <button class="btn btn-primary" id="botaoCriarAtividade" onclick="criarAtividade($(this))">Iniciar Turno</button>
         </div>
-        <div class="row">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Iníco Atividade</th>
-                        <th>Descrição</th>
-                        <th>Conclusão Atividade</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelaRegistros"></tbody>
-            </table>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Início</th>
+                            <th>Descrição</th>
+                            <th>Conclusão</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaRegistros"></tbody>
+                </table>
+            </div>
         </div>
     </div>
+
 </div>
 
 <script>
@@ -198,11 +198,11 @@
                 if (response.status) {
                     $("#botaoCriarAtividade").html("Iniciar Turno")
                     toastr.success(response.msg + data)
+                    $("#projeto").prop("disabled", true);
                 } else {
                     muda_status_botao("botaoCriarAtividade", "Iniciar Turno", false)
                     toastr.warning(response.msg)
                 }
-
             },
             error: function(xhr, status, error) {
                 console.error(error);
@@ -299,12 +299,18 @@
             success: function(response) {
                 $("#projeto").show()
                 $("#spinner").hide()
+                const trabalhando = "<?= $trabalhando ?>";
+
                 if (response.status) {
                     let linha = '';
                     $.each(response.data, function(i, val) {
                         linha += `<option value="${val.projeto_id}">${val.projeto}</option>`;
                     });
                     $("#projeto").html(linha);
+                    if (trabalhando) {
+                        $("#projeto").val(trabalhando);
+                        $("#projeto").prop("disabled", true);
+                    }
                 } else {
                     toastr.warning(response.msg)
                 }
