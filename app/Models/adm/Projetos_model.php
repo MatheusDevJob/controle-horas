@@ -57,13 +57,12 @@ final class Projetos_model extends Model
             "data_registro"                 => $dataRegistro,
         ], JSON_UNESCAPED_UNICODE);
 
-        $db = $this->db->table("auditoria_registro_horas.auditoria_projetos")
+        $db = $this->db->table("auditoria_projetos")
             ->set([
                 "operacao"                  => "cadastro",
                 "dados"                     => $auditoria,
-                "usuario_fk"                => $userID,
-                "usuario_nome"              => $userNome,
-                "usuario_tipo_fk"           => $tipoUsuarioID,
+                "quem_fez"                  => $userID,
+                "tipo_quem_fez"             => $tipoUsuarioID,
                 "projeto_fk"                => $this->db->insertID(),
             ]);
         $sql = $db->getCompiledInsert(false);
@@ -99,14 +98,13 @@ final class Projetos_model extends Model
             "cliente_id"                    => $clienteID,
         ], JSON_UNESCAPED_UNICODE);
 
-        $db = $this->db->table("auditoria_registro_horas.auditoria_projetos")
+        $db = $this->db->table("auditoria_projetos")
             ->set([
                 "operacao"                  => "atualização",
                 "dados"                     => $auditoria,
                 "data_evento"               => $data,
-                "usuario_fk"                => $userID,
-                "usuario_nome"              => $userNome,
-                "usuario_tipo_fk"           => $tipoUsuarioID,
+                "quem_fez"                  => $userID,
+                "tipo_quem_fez"             => $tipoUsuarioID,
                 "projeto_fk"                => $projetoID,
             ]);
         $sql = $db->getCompiledInsert(false);

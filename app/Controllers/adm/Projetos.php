@@ -105,10 +105,10 @@ final class Projetos extends BaseController
 
             $data                       = date("Y-m-d H:i:s");
 
-            $status                     = $this->projM->mudaStatusProjeto($projetoID, $clienteID, $status, $data, $userID, $userNome, $tipoUsuarioID);
+            $resultado                  = $this->projM->mudaStatusProjeto($projetoID, $clienteID, $status, $data, $userID, $userNome, $tipoUsuarioID);
             $resposta = [
-                "status"                => $status,
-                "msg"                   => "Projeto " . $status ? "Ativado." : "Inativado."
+                "status"                => $resultado,
+                "msg"                   => "Projeto " . $status == 1 ? "Ativado." : "Inativado."
             ];
         } catch (\Throwable $th) {
             $resposta = [
