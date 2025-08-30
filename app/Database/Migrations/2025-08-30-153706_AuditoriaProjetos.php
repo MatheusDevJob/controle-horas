@@ -16,6 +16,7 @@ class AuditoriaProjetos extends Migration
             'id'            => ['type' => 'BIGINT', 'unsigned' => true, 'auto_increment' => true],
             'operacao'      => ['type' => 'VARCHAR', 'constraint' => 100, 'null' => false],
             'dados'         => ['type' => 'LONGTEXT', 'null' => false],
+            'data_evento'   => ['type' => 'DATETIME', 'null' => true],
             'quem_fez'      => ['type' => 'BIGINT', 'unsigned' => true, 'null' => false, 'comment' => 'usuário que realizou a mudança'],
             'tipo_quem_fez' => ['type' => 'TINYINT', 'null' => false, 'comment' => 'tipo de conta que realizou a ação'],
             'projeto_fk'    => ['type' => 'INT', 'unsigned' => true, 'null' => false, 'comment' => 'projeto que sofreu as mudanças'],
