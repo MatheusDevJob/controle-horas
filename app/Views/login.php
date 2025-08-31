@@ -9,7 +9,10 @@
     <link rel="stylesheet" href="<?= base_url('bootstrap-5.3.3-dist/css/bootstrap.css') ?>">
     <link rel="stylesheet" href="<?= base_url('fontawesome/css/all.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('toastr/toastr.min.css') ?>">
-
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= base_url('icon.png?v=1') ?>">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url('icon.png?v=1') ?>">
+    <link rel="shortcut icon" href="<?= base_url('icon.png?v=1') ?>">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url('icon.png?v=1') ?>">
     <style>
         body {
             min-height: 100vh;
