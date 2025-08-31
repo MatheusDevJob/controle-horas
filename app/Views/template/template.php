@@ -575,7 +575,54 @@
             }
         }
     </style>
+</head>
 
+<body>
+    <div class="app-shell">
+        <!-- Sidebar -->
+        <aside class="app-sidebar">
+            <a class="app-brand" href="/sistema">
+                <i class="fa-solid fa-clipboard-list"></i>
+                <span><?= $titulo ?></span>
+            </a>
+
+            <nav class="app-nav nav flex-column">
+                <a class="nav-link" href="/sistema"><i class="fa-solid fa-house"></i> Home</a>
+
+                <?php if ($_SESSION['tipo_usuario_fk'] == 1): ?>
+                    <a class="nav-link" href="<?= base_url('sistema/adm/visualizar_usuarios') ?>"><i class="fa-solid fa-users"></i> Colaboradores</a>
+                    <a class="nav-link" href="<?= base_url('sistema/adm/visualizar_projetos') ?>"><i class="fa-solid fa-folder-open"></i> Projetos</a>
+                <?php endif; ?>
+
+                <a class="nav-link" href="<?= base_url('sistema/visualizar_atividades') ?>"><i class="fa-solid fa-clipboard-check"></i> Atividades</a>
+            </nav>
+        </aside>
+
+        <!-- Main -->
+        <div class="d-flex flex-column">
+            <!-- Header -->
+            <header class="app-header">
+                <nav class="navbar navbar-expand px-3">
+                    <div class="ms-auto d-flex align-items-center gap-2">
+                        <span id="elementoDataHora" class="small text-body-secondary"></span>
+                        <button id="themeToggle" class="btn btn-sm btn-outline-secondary" title="Tema">
+                            <i class="fa-solid fa-moon"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="logout()">
+                            <i class="fa-solid fa-right-from-bracket"></i> Sair
+                        </button>
+                    </div>
+                </nav>
+            </header>
+
+            <!-- Content -->
+            <main class="app-content">
+                <div class="container-fluid">
+                    <?= $this->renderSection('servico'); ?>
+                </div>
+            </main>
+        </div>
+    </div>
 
     <script>
         // Máscaras + relógio + toggle
@@ -655,54 +702,6 @@
             $('#elementoDataHora').text(dataHoraAtual);
         }
     </script>
-</head>
-
-<body>
-    <div class="app-shell">
-        <!-- Sidebar -->
-        <aside class="app-sidebar">
-            <a class="app-brand" href="/sistema">
-                <i class="fa-solid fa-clipboard-list"></i>
-                <span><?= $titulo ?></span>
-            </a>
-
-            <nav class="app-nav nav flex-column">
-                <a class="nav-link" href="/sistema"><i class="fa-solid fa-house"></i> Home</a>
-
-                <?php if ($_SESSION['tipo_usuario_fk'] == 1): ?>
-                    <a class="nav-link" href="<?= base_url('sistema/adm/visualizar_usuarios') ?>"><i class="fa-solid fa-users"></i> Colaboradores</a>
-                    <a class="nav-link" href="<?= base_url('sistema/adm/visualizar_projetos') ?>"><i class="fa-solid fa-folder-open"></i> Projetos</a>
-                <?php endif; ?>
-
-                <a class="nav-link" href="<?= base_url('sistema/visualizar_atividades') ?>"><i class="fa-solid fa-clipboard-check"></i> Atividades</a>
-            </nav>
-        </aside>
-
-        <!-- Main -->
-        <div class="d-flex flex-column">
-            <!-- Header -->
-            <header class="app-header">
-                <nav class="navbar navbar-expand px-3">
-                    <div class="ms-auto d-flex align-items-center gap-2">
-                        <span id="elementoDataHora" class="small text-body-secondary"></span>
-                        <button id="themeToggle" class="btn btn-sm btn-outline-secondary" title="Tema">
-                            <i class="fa-solid fa-moon"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="logout()">
-                            <i class="fa-solid fa-right-from-bracket"></i> Sair
-                        </button>
-                    </div>
-                </nav>
-            </header>
-
-            <!-- Content -->
-            <main class="app-content">
-                <div class="container-fluid">
-                    <?= $this->renderSection('servico'); ?>
-                </div>
-            </main>
-        </div>
-    </div>
 </body>
 
 </html>
