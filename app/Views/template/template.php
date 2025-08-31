@@ -5,8 +5,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title><?= $titulo ?></title>
+    <link rel="icon" type="image/png" sizes="32x32" href="<?= base_url('icon.png?v=1') ?>">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url('icon.png?v=1') ?>">
+    <link rel="shortcut icon" href="<?= base_url('icon.png?v=1') ?>">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?= base_url('icon.png?v=1') ?>">
 
-    <!-- === ANTI-FLASH & TEMA PERSISTENTE (antes de QUALQUER CSS) === -->
     <script>
         (function() {
             var KEY = 'ui.theme';
